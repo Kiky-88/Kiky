@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Yun-Ta Hsieh" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="keywords"
+      content="Yun-Ta Hsieh, University of Pennsylvania, University of Michigan, The Ohio State University, Multimodal Models, VLA, GUI Agents, Efficient ML Systems"
+    />
+    <meta
+      name="description"
+      content="Yun-Ta Hsieh is a research assistant working on multimodal agents, vision-language-action systems, and evaluation benchmarks."
+    />
+    <title>Yun-Ta Hsieh</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+      <span class="theme-icon theme-icon-sun" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="m4.93 4.93 1.41 1.41"></path>
+          <path d="m17.66 17.66 1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="m6.34 17.66-1.41 1.41"></path>
+          <path d="m19.07 4.93-1.41 1.41"></path>
+        </svg>
+      </span>
+      <span class="theme-icon theme-icon-moon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5Z"></path>
+        </svg>
+      </span>
+    </button>
+    <div class="background"></div>
+    <div class="dark-overlay"></div>
+
+    <table class="container">
+      <tbody>
+        <tr>
+          <td>
+            <table class="intro-section">
+              <tbody>
+                <tr>
+                  <td class="portrait-cell">
+                    <a href="images/profile.jpg">
+                      <img
+                        class="profile-photo"
+                        src="images/profile.jpg"
+                        alt="Yun-Ta Hsieh profile photo"
+                      />
+                    </a>
+                  </td>
+                  <td class="intro-cell">
+                    <p class="name">Yun-Ta Hsieh</p>
+                    <p>
+                      I am currently pursuing my M.A.S. in Computer Science at the
+                      <a href="https://www.upenn.edu/" class="a_upenn" target="_blank" rel="noreferrer">University of Pennsylvania</a>,
+                      after receiving my M.S. in Digital and Material Technologies from the
+                      <a href="https://umich.edu/" class="a_umich" target="_blank" rel="noreferrer">University of Michigan</a>,
+                      and B.Arch. from
+                      <a href="https://english.hust.edu.cn/" target="_blank" rel="noreferrer">Huazhong University of Science and Technology</a>.
+                    </p>
+                    <p>
+                      I am also a research assistant at
+                      <a href="https://www.osu.edu/" class="a_osu" target="_blank" rel="noreferrer">The Ohio State University</a>,
+                      working with Prof.
+                      <a href="https://mi-zhang.github.io/" target="_blank" rel="noreferrer">Mi Zhang</a>.
+                      My current work focuses on
+                      <strong>multimodal agents</strong>,
+                      <strong>vision-language-action systems</strong>, and
+                      <strong>evaluation benchmarks</strong> for multimodal and GUI-oriented reasoning.
+                    </p>
+                    <p class="profile-links">
+                      <span class="pending-link">CV</span>
+                      &nbsp;/&nbsp;
+                      <a href="https://scholar.google.com/citations?user=X45ixKAAAAAJ&amp;hl=en" target="_blank" rel="noreferrer">Google Scholar</a>
+                      &nbsp;/&nbsp;
+                      <a href="mailto:yunta@seas.upenn.edu">Email</a>
+                      &nbsp;/&nbsp;
+                      <a href="https://github.com/Kiky-88" target="_blank" rel="noreferrer">GitHub</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="tab-navigation">
+              <button class="tab-btn active" data-tab="publications" type="button">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M7 3h7l4 4v14H7z"></path>
+                    <path d="M14 3v5h5"></path>
+                    <path d="M10 12h6"></path>
+                    <path d="M10 16h6"></path>
+                  </svg>
+                </span>
+                <span>Publications</span>
+              </button>
+              <button class="tab-btn" data-tab="education" type="button">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M3 8 12 4l9 4-9 4z"></path>
+                    <path d="M7 10v5c0 1.5 2.2 3 5 3s5-1.5 5-3v-5"></path>
+                    <path d="M21 8v6"></path>
+                  </svg>
+                </span>
+                <span>Education</span>
+              </button>
+              <button class="tab-btn" data-tab="contact" type="button">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M4 6h16v12H4z"></path>
+                    <path d="m4 7 8 6 8-6"></path>
+                  </svg>
+                </span>
+                <span>Contact</span>
+              </button>
+            </div>
+
+            <div class="tab-panels">
+              <div class="tab-content active" data-tab="publications">
+                <table class="panel-table">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h2 class="publication-section-title">Selected Publications</h2>
+                        <div class="publication">
+                          <span class="papertitle">QuantVLA: Scale-Calibrated Post-Training Quantization for Vision-Language-Action Models</span>
+                          <br />
+                          Jingxuan Zhang*, <strong>Yunta Hsieh*</strong>, Zhongwei Wan, Haokun Lin, Xin Wang, Ziqi Wang, Yingtie Lei, Mi Zhang
+                          <br />
+                          <em>CVPR 2026</em>
+                          <br />
+                          <a href="https://quantvla.github.io/" target="_blank" rel="noreferrer">Project</a>
+                          /
+                          <a href="https://arxiv.org/abs/2602.20309" target="_blank" rel="noreferrer">arXiv</a>
+                          /
+                          <a href="https://github.com/AIoT-MLSys-Lab/QuantVLA" target="_blank" rel="noreferrer">Code</a>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">OS-Omni: A Cross-Platform Benchmark for Generalist Computer-Using Agents</span>
+                          <br />
+                          Hui Shen*, <strong>Yunta Hsieh*</strong>, Jianing Ma*, Ziyuan Liu*, Qi Han*, Xiuqi Xu*, Yanheng Shang*, Chenqi Yin, Zesen Zhao, Boyuan Zheng, Jisen Li, Xiaoxia Wu, Ruoyan Zhang, et al.
+                          <br />
+                          <em>Submitted to NeurIPS 2026</em>
+                        </div>
+
+                        <h2 class="publication-section-title">Preprints</h2>
+                        <div class="publication">
+                          <span class="papertitle">MathGen: Revealing the Illusion of Mathematical Competence through Text-to-Image Generation</span>
+                          <br />
+                          R Liu, Hui Shen, Peng Zhang, <strong>Yunta Hsieh</strong>, Yuyue Zhang, J Xu, S Chen, et al.
+                          <br />
+                          <em>arXiv preprint, 2026</em>
+                          <br />
+                          <a href="https://arxiv.org/abs/2603.27959" target="_blank" rel="noreferrer">arXiv</a>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">MMSpec: Benchmarking Speculative Decoding for Vision-Language Models</span>
+                          <br />
+                          Hui Shen, Xin Wang, Peng Zhang, <strong>Yunta Hsieh</strong>, Qi Han, Zhongwei Wan, Zhe Zhang, Jingxuan Zhang, et al.
+                          <br />
+                          <em>arXiv preprint, 2026</em>
+                          <br />
+                          <a href="https://arxiv.org/abs/2603.14989" target="_blank" rel="noreferrer">arXiv</a>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">SkillEvolBench: Benchmarking the Evolution from Episodic Experience to Procedural Skills</span>
+                          <br />
+                          Yingtie Lei, Zhongwei Wan, Jiankun Zhang, Samiul Alam, Zixuan Zhong, Peizhou Huang, Xin Wang, Jingxuan Zhang, Donghao Zhou, <strong>Yunta Hsieh</strong>, Zhihao Dou, Hui Shen, et al.
+                          <br />
+                          <em>Submitted to NeurIPS 2026</em>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">Speculative Decoding for Multimodal Models: A Survey</span>
+                          <br />
+                          Yuyue Zhang, Y Wang, <strong>Yunta Hsieh</strong>, Xin Wang, Peng Zhang, Z Yang, J Ma, Z Zhao, et al.
+                          <br />
+                          <em>Preprint, 2026</em>
+                          <br />
+                          <a href="https://www.preprints.org/manuscript/202603.2344" target="_blank" rel="noreferrer">Preprints</a>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">MMFormalizer: Multimodal Autoformalization in the Wild</span>
+                          <br />
+                          Jing Xiong, Qi Han, <strong>Yunta Hsieh</strong>, Hui Shen, Hongsheng Xin, Chaofan Tao, Chenyu Zhao, et al.
+                          <br />
+                          <em>arXiv preprint, 2026</em>
+                          <br />
+                          <a href="https://arxiv.org/abs/2601.03017" target="_blank" rel="noreferrer">arXiv</a>
+                        </div>
+
+                        <div class="publication">
+                          <span class="papertitle">PhyX: Does Your Model Have the "Wits" for Physical Reasoning?</span>
+                          <br />
+                          Hui Shen, Taiqiang Wu, Qi Han, <strong>Yunta Hsieh</strong>, Jizhou Wang, Yuyue Zhang, Yuxin Cheng, et al.
+                          <br />
+                          <em>arXiv preprint, 2025</em>
+                          <br />
+                          <a href="https://arxiv.org/abs/2505.15929" target="_blank" rel="noreferrer">arXiv</a>
+                          /
+                          <a href="https://openreview.net/forum?id=UK0j7E1f4i" target="_blank" rel="noreferrer">OpenReview</a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tab-content" data-tab="education">
+                <table class="panel-table education-table">
+                  <colgroup>
+                    <col class="education-logo-col" />
+                    <col class="education-text-col" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <td class="school-logo">
+                        <img src="images/upenn.svg" alt="University of Pennsylvania logo" />
+                      </td>
+                      <td class="school-info">
+                        <p>
+                          <strong>University of Pennsylvania, USA</strong>
+                          <br />
+                          M.A.S. Student in Computer Science
+                          <br />
+                          <em>In progress</em>
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="school-logo">
+                        <img src="images/umich.svg" alt="University of Michigan logo" />
+                      </td>
+                      <td class="school-info">
+                        <p>
+                          <strong>University of Michigan, USA</strong>
+                          <br />
+                          Master of Science in Digital and Material Technologies
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="school-logo">
+                        <img src="images/hust.svg" alt="Huazhong University of Science and Technology logo" />
+                      </td>
+                      <td class="school-info">
+                        <p>
+                          <strong>Huazhong University of Science and Technology, China</strong>
+                          <br />
+                          Bachelor of Architecture
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tab-content" data-tab="contact">
+                <table class="panel-table">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <p>
+                          Email:
+                          <a href="mailto:yunta@seas.upenn.edu">yunta@seas.upenn.edu</a>
+                        </p>
+                        <p>
+                          GitHub:
+                          <a href="https://github.com/Kiky-88" target="_blank" rel="noreferrer">Kiky-88</a>
+                        </p>
+                        <p class="muted">CV and profile photo will be added later.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <footer>
+              <p>Last updated: May 2026</p>
+            </footer>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="script.js"></script>
+  </body>
+</html>
