@@ -20,7 +20,7 @@
     <header class="site-header">
       <div class="site-header-inner">
         <div class="brand-group">
-          <a class="brand" href="#home" data-nav-home>Yun-Ta Hsieh</a>
+          <button class="brand" type="button" data-tab-target="home">Yun-Ta Hsieh</button>
           <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
             <span class="theme-icon theme-icon-sun" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
@@ -44,7 +44,7 @@
         </div>
 
         <nav class="site-nav" aria-label="Primary navigation">
-          <a class="nav-link active" href="#home" data-nav-home>Home🫡</a>
+          <button class="nav-link active" type="button" data-tab-target="home">Home🫡</button>
           <button class="nav-link" type="button" data-tab-target="publications">Publications📕</button>
           <button class="nav-link" type="button" data-tab-target="education">Education🎓</button>
         </nav>
@@ -104,7 +104,17 @@
             </table>
 
             <div class="tab-navigation">
-              <button class="tab-btn active" data-tab="publications" type="button">
+              <button class="tab-btn active" data-tab="home" type="button">
+                <span class="tab-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false">
+                    <path d="M3 11.5 12 4l9 7.5"></path>
+                    <path d="M5 10.5V20h14v-9.5"></path>
+                    <path d="M10 20v-5h4v5"></path>
+                  </svg>
+                </span>
+                <span>Home</span>
+              </button>
+              <button class="tab-btn" data-tab="publications" type="button">
                 <span class="tab-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" focusable="false">
                     <path d="M7 3h7l4 4v14H7z"></path>
@@ -137,7 +147,27 @@
             </div>
 
             <div class="tab-panels">
-              <div class="tab-content active" data-tab="publications">
+              <div class="tab-content active" data-tab="home">
+                <table class="panel-table">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h2 class="home-title">Hello!</h2>
+                        <p>
+                          Welcome to my personal academic website. I am interested in
+                          multimodal agents, efficient vision-language-action systems,
+                          and evaluation benchmarks for multimodal and GUI-oriented reasoning.
+                        </p>
+                        <p>
+                          Please use the navigation above to view my publications and education.
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="tab-content" data-tab="publications">
                 <table class="panel-table">
                   <tbody>
                     <tr>

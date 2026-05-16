@@ -3,7 +3,6 @@ const tabPanels = document.querySelectorAll(".tab-content");
 const themeToggle = document.querySelector(".theme-toggle");
 const navLinks = document.querySelectorAll(".site-nav .nav-link");
 const tabNavLinks = document.querySelectorAll("[data-tab-target]");
-const homeLinks = document.querySelectorAll("[data-nav-home]");
 const storedTheme = localStorage.getItem("theme");
 
 const setTheme = (theme) => {
@@ -66,19 +65,6 @@ tabNavLinks.forEach((link) => {
   link.addEventListener("click", () => {
     activateTab(link.dataset.tabTarget);
     document.querySelector(".tab-panels")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  });
-});
-
-homeLinks.forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    navLinks.forEach((item) => {
-      item.classList.toggle("active", item.hasAttribute("data-nav-home"));
-    });
-    document.querySelector("#home")?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });

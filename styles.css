@@ -149,12 +149,17 @@ li {
 }
 
 .brand {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
   color: var(--text-color);
   font-family: var(--font-ui);
   font-size: clamp(1.1rem, 2vw, 1.72rem);
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .brand:hover,
@@ -481,6 +486,12 @@ li {
 .scrollable-list::-webkit-scrollbar-thumb {
   background: rgba(31, 41, 51, 0.22);
   border-radius: 8px;
+}
+
+.home-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
 }
 
 .research-list {
