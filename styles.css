@@ -79,6 +79,10 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+body.lightbox-open {
+  overflow: hidden;
+}
+
 a {
   color: var(--link-color);
   text-decoration: none;
@@ -588,12 +592,18 @@ li {
   background: transparent;
 }
 
-.project-strip a {
+.project-slide {
+  appearance: none;
+  display: block;
   flex: 0 0 min(58%, 360px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
   scroll-snap-align: start;
 }
 
-.project-strip img {
+.project-slide img {
   display: block;
   width: 100%;
   aspect-ratio: 842 / 595;
@@ -633,6 +643,86 @@ li {
 
 .gallery-arrow-right {
   right: 0;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  place-items: center;
+  padding: 30px 78px;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.lightbox.open {
+  display: grid;
+}
+
+.lightbox-figure {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  max-width: min(1120px, 100%);
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 100%;
+  max-height: 82vh;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.lightbox-caption {
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  position: fixed;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+}
+
+.lightbox-close {
+  top: 22px;
+  right: 22px;
+  width: 42px;
+  height: 42px;
+  font-size: 2rem;
+}
+
+.lightbox-nav {
+  top: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 2.4rem;
+  transform: translateY(-50%);
+}
+
+.lightbox-prev {
+  left: 22px;
+}
+
+.lightbox-next {
+  right: 22px;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus,
+.lightbox-nav:hover,
+.lightbox-nav:focus {
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .portfolio-link {
@@ -926,7 +1016,7 @@ footer p {
     grid-template-columns: 1fr;
   }
 
-  .project-strip a {
+  .project-slide {
     flex-basis: min(72%, 340px);
   }
 }
@@ -983,5 +1073,23 @@ footer p {
     width: 44px;
     justify-content: center;
     padding: 0;
+  }
+
+  .lightbox {
+    padding: 24px 48px;
+  }
+
+  .lightbox-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 2rem;
+  }
+
+  .lightbox-prev {
+    left: 8px;
+  }
+
+  .lightbox-next {
+    right: 8px;
   }
 }
