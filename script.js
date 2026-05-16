@@ -1,6 +1,9 @@
 const tabButtons = document.querySelectorAll(".tab-btn");
 const tabPanels = document.querySelectorAll(".tab-content");
 const themeToggle = document.querySelector(".theme-toggle");
+const navLinks = document.querySelectorAll(".site-nav .nav-link");
+const tabNavLinks = document.querySelectorAll("[data-tab-target]");
+const homeLinks = document.querySelectorAll("[data-nav-home]");
 const storedTheme = localStorage.getItem("theme");
 
 const setTheme = (theme) => {
@@ -25,26 +28,59 @@ themeToggle?.addEventListener("click", () => {
   setTheme(nextTheme);
 });
 
+const activateTab = (target, sourceButton) => {
+  if (!target) return;
+
+  if (sourceButton) {
+    sourceButton.classList.remove("is-popping");
+    void sourceButton.offsetWidth;
+    sourceButton.classList.add("is-popping");
+  }
+
+  tabButtons.forEach((item) => {
+    const selected = item.dataset.tab === target;
+    item.classList.toggle("active", selected);
+    item.setAttribute("aria-selected", String(selected));
+  });
+
+  tabPanels.forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.tab === target);
+  });
+
+  navLinks.forEach((item) => {
+    item.classList.toggle("active", item.dataset.tabTarget === target);
+  });
+};
+
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    const target = button.dataset.tab;
-
-    button.classList.remove("is-popping");
-    void button.offsetWidth;
-    button.classList.add("is-popping");
-
-    tabButtons.forEach((item) => {
-      const selected = item === button;
-      item.classList.toggle("active", selected);
-      item.setAttribute("aria-selected", String(selected));
-    });
-
-    tabPanels.forEach((panel) => {
-      panel.classList.toggle("active", panel.dataset.tab === target);
-    });
+    activateTab(button.dataset.tab, button);
   });
 
   button.addEventListener("animationend", () => {
     button.classList.remove("is-popping");
+  });
+});
+
+tabNavLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    activateTab(link.dataset.tabTarget);
+    document.querySelector(".tab-panels")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+});
+
+homeLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    navLinks.forEach((item) => {
+      item.classList.toggle("active", item.hasAttribute("data-nav-home"));
+    });
+    document.querySelector("#home")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   });
 });

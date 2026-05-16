@@ -17,30 +17,54 @@
   </head>
 
   <body>
-    <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
-      <span class="theme-icon theme-icon-sun" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2"></path>
-          <path d="M12 20v2"></path>
-          <path d="m4.93 4.93 1.41 1.41"></path>
-          <path d="m17.66 17.66 1.41 1.41"></path>
-          <path d="M2 12h2"></path>
-          <path d="M20 12h2"></path>
-          <path d="m6.34 17.66-1.41 1.41"></path>
-          <path d="m19.07 4.93-1.41 1.41"></path>
-        </svg>
-      </span>
-      <span class="theme-icon theme-icon-moon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5Z"></path>
-        </svg>
-      </span>
-    </button>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand-group">
+          <a class="brand" href="#home" data-nav-home>Yun-Ta Hsieh</a>
+          <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+            <span class="theme-icon theme-icon-sun" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </span>
+            <span class="theme-icon theme-icon-moon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5Z"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="nav-link active" href="#home" data-nav-home>Home🫡</a>
+          <button class="nav-link" type="button" data-tab-target="publications">Publications📕</button>
+          <button class="nav-link" type="button" data-tab-target="education">Education🎓</button>
+          <div class="nav-dropdown">
+            <button class="nav-link nav-dropdown-toggle" type="button" aria-expanded="false">
+              When I'm Not Doing Research🌊
+              <span class="dropdown-caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="nav-dropdown-menu">
+              <span>Strength training</span>
+              <span>Good food</span>
+              <span>Travel & city walks</span>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
     <div class="background"></div>
     <div class="dark-overlay"></div>
 
-    <table class="container">
+    <table class="container" id="home">
       <tbody>
         <tr>
           <td>
