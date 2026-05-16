@@ -5,6 +5,7 @@ const navLinks = document.querySelectorAll(".site-nav .nav-link");
 const tabNavLinks = document.querySelectorAll("[data-tab-target]");
 const contactWidget = document.querySelector(".contact-widget");
 const contactWidgetToggle = document.querySelector(".contact-widget-toggle");
+const galleryArrows = document.querySelectorAll(".gallery-arrow");
 const storedTheme = localStorage.getItem("theme");
 
 const setTheme = (theme) => {
@@ -76,4 +77,17 @@ tabNavLinks.forEach((link) => {
 contactWidgetToggle?.addEventListener("click", () => {
   const isOpen = contactWidget?.classList.toggle("open") || false;
   contactWidgetToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+galleryArrows.forEach((arrow) => {
+  arrow.addEventListener("click", () => {
+    const strip = arrow.parentElement?.querySelector(".project-strip");
+    if (!strip) return;
+
+    const direction = arrow.classList.contains("gallery-arrow-left") ? -1 : 1;
+    strip.scrollBy({
+      left: direction * strip.clientWidth * 0.72,
+      behavior: "smooth",
+    });
+  });
 });

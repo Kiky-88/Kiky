@@ -504,18 +504,18 @@ li {
 
 .project-list {
   display: grid;
-  gap: 30px;
-  margin-top: 24px;
-  padding-top: 22px;
+  gap: 18px;
+  margin-top: 18px;
+  padding-top: 18px;
   border-top: 1px solid var(--border-color);
 }
 
 .project-row {
   display: grid;
-  grid-template-columns: minmax(170px, 230px) minmax(0, 1fr);
-  gap: 24px;
+  grid-template-columns: minmax(150px, 205px) minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
-  padding-bottom: 26px;
+  padding-bottom: 18px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -539,37 +539,44 @@ li {
 }
 
 .project-meta h3 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-family: var(--font-display);
-  font-size: 1.28rem;
+  font-size: 1.12rem;
   line-height: 1.25;
 }
 
 .project-meta p {
   margin-bottom: 0;
+  font-size: 0.93rem;
+  line-height: 1.45;
 }
 
 .scroll-hint {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 9px;
   color: var(--link-color);
   font-family: var(--font-mono);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 700;
+}
+
+.project-gallery {
+  position: relative;
+  min-width: 0;
 }
 
 .project-strip {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  padding: 0 0 14px;
+  padding: 0 46px 10px;
   scrollbar-color: var(--section-title-bar) transparent;
 }
 
 .project-strip::-webkit-scrollbar {
-  height: 9px;
+  height: 7px;
 }
 
 .project-strip::-webkit-scrollbar-thumb {
@@ -582,7 +589,7 @@ li {
 }
 
 .project-strip a {
-  flex: 0 0 min(78%, 520px);
+  flex: 0 0 min(58%, 360px);
   scroll-snap-align: start;
 }
 
@@ -593,6 +600,39 @@ li {
   object-fit: cover;
   border: 1px solid var(--border-color);
   border-radius: 4px;
+}
+
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--tab-active);
+  color: var(--tab-active-text);
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+}
+
+.gallery-arrow:hover,
+.gallery-arrow:focus {
+  opacity: 0.82;
+}
+
+.gallery-arrow-left {
+  left: 0;
+}
+
+.gallery-arrow-right {
+  right: 0;
 }
 
 .portfolio-link {
@@ -887,7 +927,7 @@ footer p {
   }
 
   .project-strip a {
-    flex-basis: min(86%, 430px);
+    flex-basis: min(72%, 340px);
   }
 }
 
