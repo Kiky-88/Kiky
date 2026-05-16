@@ -522,7 +522,7 @@ li {
   display: grid;
   grid-template-columns: minmax(150px, 205px) minmax(0, 1fr);
   gap: 18px;
-  align-items: start;
+  align-items: center;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--border-color);
 }
@@ -535,7 +535,7 @@ li {
 .project-meta {
   position: sticky;
   left: 0;
-  align-self: start;
+  align-self: center;
 }
 
 .project-meta h3 {
