@@ -538,34 +538,11 @@ li {
   align-self: start;
 }
 
-.project-index {
-  display: inline-block;
-  margin-bottom: 5px;
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-}
-
 .project-meta h3 {
-  margin: 0 0 6px;
+  margin: 0;
   font-family: var(--font-display);
   font-size: 1.12rem;
   line-height: 1.25;
-}
-
-.project-meta p {
-  margin-bottom: 0;
-  font-size: 0.93rem;
-  line-height: 1.45;
-}
-
-.scroll-hint {
-  display: inline-block;
-  margin-top: 9px;
-  color: var(--link-color);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .project-gallery {
