@@ -737,12 +737,6 @@ li {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.portfolio-link {
-  margin: 20px 0 0;
-  font-family: var(--font-mono);
-  font-weight: 700;
-}
-
 .research-list {
   margin-top: 8px;
 }
