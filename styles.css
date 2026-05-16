@@ -502,32 +502,103 @@ li {
   font-weight: 700;
 }
 
-.portfolio-preview {
+.project-list {
   display: grid;
-  grid-template-columns: minmax(180px, 270px) minmax(0, 1fr);
-  gap: 22px;
-  align-items: center;
+  gap: 30px;
   margin-top: 24px;
   padding-top: 22px;
   border-top: 1px solid var(--border-color);
 }
 
-.portfolio-preview img {
-  display: block;
-  width: 100%;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+.project-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 230px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.portfolio-preview h3 {
+.project-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.project-meta {
+  position: sticky;
+  left: 0;
+  align-self: start;
+}
+
+.project-index {
+  display: inline-block;
+  margin-bottom: 5px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.project-meta h3 {
   margin: 0 0 8px;
   font-family: var(--font-display);
   font-size: 1.28rem;
   line-height: 1.25;
 }
 
-.portfolio-preview p {
-  margin-bottom: 12px;
+.project-meta p {
+  margin-bottom: 0;
+}
+
+.scroll-hint {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--link-color);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.project-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding: 0 0 14px;
+  scrollbar-color: var(--section-title-bar) transparent;
+}
+
+.project-strip::-webkit-scrollbar {
+  height: 9px;
+}
+
+.project-strip::-webkit-scrollbar-thumb {
+  background: var(--section-title-bar);
+  border-radius: 999px;
+}
+
+.project-strip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-strip a {
+  flex: 0 0 min(78%, 520px);
+  scroll-snap-align: start;
+}
+
+.project-strip img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 842 / 595;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.portfolio-link {
+  margin: 20px 0 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
 }
 
 .research-list {
@@ -811,12 +882,12 @@ footer p {
     padding-left: 4% !important;
   }
 
-  .portfolio-preview {
+  .project-row {
     grid-template-columns: 1fr;
   }
 
-  .portfolio-preview img {
-    max-width: 360px;
+  .project-strip a {
+    flex-basis: min(86%, 430px);
   }
 }
 
