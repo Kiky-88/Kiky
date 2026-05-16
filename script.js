@@ -92,9 +92,23 @@ galleryArrows.forEach((arrow) => {
     const strip = arrow.parentElement?.querySelector(".project-strip");
     if (!strip) return;
 
+    const slides = Array.from(strip.querySelectorAll(".project-slide"));
+    if (slides.length === 0) return;
+
     const direction = arrow.classList.contains("gallery-arrow-left") ? -1 : 1;
-    strip.scrollBy({
-      left: direction * strip.clientWidth * 0.72,
+    const stripStyles = window.getComputedStyle(strip);
+    const leadingPadding = parseFloat(stripStyles.paddingLeft) || 0;
+    const viewportStart = strip.getBoundingClientRect().left + leadingPadding;
+    const currentIndex = slides.reduce((nearestIndex, slide, index) => {
+      const nearestDistance = Math.abs(slides[nearestIndex].getBoundingClientRect().left - viewportStart);
+      const slideDistance = Math.abs(slide.getBoundingClientRect().left - viewportStart);
+      return slideDistance < nearestDistance ? index : nearestIndex;
+    }, 0);
+    const targetIndex = Math.max(0, Math.min(slides.length - 1, currentIndex + direction));
+    const targetDistance = slides[targetIndex].getBoundingClientRect().left - viewportStart;
+
+    strip.scrollTo({
+      left: strip.scrollLeft + targetDistance,
       behavior: "smooth",
     });
   });
