@@ -75,9 +75,13 @@ tabButtons.forEach((button) => {
 tabNavLinks.forEach((link) => {
   link.addEventListener("click", () => {
     activateTab(link.dataset.tabTarget);
-    document.querySelector(".tab-panels")?.scrollIntoView({
+    const tabPanelsTop = document.querySelector(".tab-panels")?.getBoundingClientRect().top;
+    if (tabPanelsTop === undefined) return;
+
+    const headerHeight = document.querySelector(".site-header")?.offsetHeight || 0;
+    window.scrollTo({
+      top: Math.max(0, window.scrollY + tabPanelsTop - headerHeight - 18),
       behavior: "smooth",
-      block: "start",
     });
   });
 });
