@@ -3,6 +3,8 @@ const tabPanels = document.querySelectorAll(".tab-content");
 const themeToggle = document.querySelector(".theme-toggle");
 const navLinks = document.querySelectorAll(".site-nav .nav-link");
 const tabNavLinks = document.querySelectorAll("[data-tab-target]");
+const contactWidget = document.querySelector(".contact-widget");
+const contactWidgetToggle = document.querySelector(".contact-widget-toggle");
 const storedTheme = localStorage.getItem("theme");
 
 const setTheme = (theme) => {
@@ -69,4 +71,9 @@ tabNavLinks.forEach((link) => {
       block: "start",
     });
   });
+});
+
+contactWidgetToggle?.addEventListener("click", () => {
+  const isOpen = contactWidget?.classList.toggle("open") || false;
+  contactWidgetToggle.setAttribute("aria-expanded", String(isOpen));
 });
