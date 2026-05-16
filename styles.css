@@ -80,6 +80,8 @@ body {
   min-height: 100vh;
   background: var(--bg-color);
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -106,8 +108,8 @@ a:focus {
 }
 
 strong {
-  font-family: var(--font-ui);
-  font-weight: 750;
+  font-family: inherit;
+  font-weight: 700;
 }
 
 p {
