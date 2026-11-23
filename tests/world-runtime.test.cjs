@@ -14,6 +14,7 @@ vm.runInNewContext(source['world-engine.js'], sandbox);
 const core = sandbox.ResearchWorldCore;
 const events = new Map(), elements = new Map(), frames = [], entries = [];
 let clock = 0, lastPlayer = null;
+const renderedPositions=[];
 function element(id) {
   return { style: {}, dataset: { place: id },
     setAttribute(key, value) { this[key] = value; },
@@ -23,7 +24,7 @@ for (const id of Object.keys(core.places)) elements.set(id, element(id));
 for (const id of ['.world-spawn-label', '.world-reset']) elements.set(id, element(id));
 const context = new Proxy({}, {
   get(object, key) {
-    if (key === 'translate') return (x, y) => { assert.ok(core.walkable(x, y), 'Rendered avatar left a road'); lastPlayer = {x,y}; };
+    if (key === 'translate') return (x, y) => { assert.ok(core.walkable(x, y), 'Rendered avatar left a road'); lastPlayer = {x,y}; renderedPositions.push({x,y,time:clock}); };
     if (key === 'createLinearGradient' || key === 'createRadialGradient') return () => ({ addColorStop() {} });
     return object[key] ?? (() => {});
   },
@@ -75,13 +76,20 @@ events.get('.world-reset:click')();flush();
 let maxDuration = 0;
 for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) {
   const before = entries.length, start = clock;
-  events.get(`${id}:click`)(); flush();
+  const origin={...lastPlayer}, sampleStart=renderedPositions.length;
+  events.get(`${id}:click`)();
+  assert.equal(entries.length,before,'Portal must wait for the teleport animation');
+  flush();
+  const target=core.places[id], near=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y)<.01;
+  const samples=renderedPositions.slice(sampleStart);
+  assert.ok(samples.every(p=>near(p,origin)||near(p,target)),'Teleport must not walk between the two points');
+  assert.ok(samples.some(p=>near(p,target)&&p.time-start>=350),'Missing destination materialization');
   assert.equal(entries.length, before + 1);
   const last = entries.at(-1);
   assert.equal(last.url, core.places[id].href);
   assert.ok(Number.isFinite(last.options.portal.x) && Number.isFinite(last.options.portal.y));
   maxDuration = Math.max(maxDuration, last.time - start);
 }
-assert.ok(maxDuration <= 340, 'Travel became too slow');
+assert.ok(maxDuration >= 740 && maxDuration <= 780, 'Teleport must finish its departure and arrival animation');
 events.get('.world-reset:click')(); flush();
 console.log(`PASS: calibrated renderer, exact road clicks, lateral/diagonal input, hover, 16 automatic entries, reset, max ${maxDuration}ms travel.`);
