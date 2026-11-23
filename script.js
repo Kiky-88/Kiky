@@ -7,7 +7,7 @@ function setTheme(theme) {
   const isDark = theme === 'dark';
   themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
   themeToggle.setAttribute('aria-pressed', String(isDark));
-  document.querySelector('meta[name="theme-color"]').content = isDark ? '#141e1d' : '#fafbf9';
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0c1017' : '#f4f6fa';
 }
 setTheme(document.documentElement.dataset.theme);
 themeToggle.addEventListener('click', () => {
@@ -114,3 +114,20 @@ document.addEventListener('keydown', event => {
     buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length].focus();
   }
 });
+
+// Publication filters keep the complete research list available without navigation.
+const filterButtons = [...document.querySelectorAll('.filter-button')];
+filterButtons.forEach(button => button.addEventListener('click', () => {
+  const filter = button.dataset.filter;
+  filterButtons.forEach(item => {
+    const selected = item === button;
+    item.classList.toggle('active', selected);
+    item.setAttribute('aria-pressed', String(selected));
+  });
+  document.querySelectorAll('.publication').forEach(article => {
+    article.hidden = filter !== 'all' && article.dataset.status !== filter;
+  });
+  document.querySelectorAll('.publication-group').forEach(group => {
+    group.hidden = ![...group.querySelectorAll('.publication')].some(article => !article.hidden);
+  });
+}));
