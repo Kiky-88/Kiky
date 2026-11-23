@@ -7,7 +7,7 @@ function setTheme(theme) {
   const isDark = theme === 'dark';
   themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
   themeToggle.setAttribute('aria-pressed', String(isDark));
-  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0c1017' : '#f4f6fa';
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0f1923' : '#ece8e1';
 }
 setTheme(document.documentElement.dataset.theme);
 themeToggle.addEventListener('click', () => {
@@ -16,29 +16,16 @@ themeToggle.addEventListener('click', () => {
   try { localStorage.setItem('homepage-theme', next); } catch (_) { /* Theme works without storage. */ }
 });
 
-const navLinks = [...document.querySelectorAll('.nav-link')];
-function updateNavigation() {
-  const threshold = document.querySelector('.site-header').offsetHeight + 120;
-  let current = '#about';
-  for (const link of navLinks) {
-    const section = document.querySelector(link.hash);
-    if (section.getBoundingClientRect().top <= threshold) current = link.hash;
-  }
-  navLinks.forEach(link => {
-    const selected = link.hash === current;
-    link.classList.toggle('active', selected);
-    if (selected) link.setAttribute('aria-current', 'location');
-    else link.removeAttribute('aria-current');
+// Use the document top instead of the sticky profile panel as the scroll target.
+document.querySelectorAll('[data-back-to-top]').forEach(link => {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    window.scrollTo({ top: 0, left: 0, behavior: scrollBehavior() });
+    const profile = document.querySelector('.profile-panel');
+    if (profile) profile.scrollTop = 0;
+    document.querySelector('.site-header .brand')?.focus({ preventScroll: true });
   });
-}
-let scrollPending = false;
-window.addEventListener('scroll', () => {
-  if (scrollPending) return;
-  scrollPending = true;
-  requestAnimationFrame(() => { updateNavigation(); scrollPending = false; });
-}, { passive: true });
-window.addEventListener('resize', updateNavigation);
-updateNavigation();
+});
 
 document.querySelectorAll('.project-gallery').forEach(gallery => {
   const strip = gallery.querySelector('.project-strip');
@@ -98,12 +85,12 @@ document.querySelectorAll('.project-slide').forEach(slide => {
     closeButton.focus({ preventScroll: true });
   });
 });
-closeButton.addEventListener('click', closeLightbox);
-document.querySelector('.lightbox-prev').addEventListener('click', () => showSlide(activeIndex - 1));
-document.querySelector('.lightbox-next').addEventListener('click', () => showSlide(activeIndex + 1));
-lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
+closeButton?.addEventListener('click', closeLightbox);
+document.querySelector('.lightbox-prev')?.addEventListener('click', () => showSlide(activeIndex - 1));
+document.querySelector('.lightbox-next')?.addEventListener('click', () => showSlide(activeIndex + 1));
+lightbox?.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
 document.addEventListener('keydown', event => {
-  if (lightbox.hidden) return;
+  if (!lightbox || lightbox.hidden) return;
   if (['Escape', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) event.preventDefault();
   if (event.key === 'Escape') closeLightbox();
   if (event.key === 'ArrowLeft') showSlide(activeIndex - 1);
