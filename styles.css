@@ -548,3 +548,21 @@ footer .brand { opacity:.75; }
 @media (max-width:760px) {
   .container { grid-template-columns:1fr; gap:28px; max-width:700px; }
 }
+/* Wind affects local canopy patches; the ground and navigation never move. */
+.world-bar-actions { display:flex; align-items:center; gap:18px; }
+.ambience-toggle { border:0; background:transparent; padding:4px 0; color:var(--muted); font:12px/1.5 var(--sans); cursor:pointer; }
+.ambience-toggle:hover { color:var(--text); }
+.foliage-layer { position:absolute; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+.foliage-patch { position:absolute; display:block; background-image:url('images/campus-night-v2.webp'); background-repeat:no-repeat; transform-origin:50% 90%; mask-image:radial-gradient(ellipse at center,#000 30%,transparent 70%); animation:canopy-wind var(--wind-duration) ease-in-out var(--wind-delay) infinite alternate; animation-play-state:paused; }
+.world-stage[data-ambient='playing'] .foliage-patch { animation-play-state:running; }
+@keyframes canopy-wind {
+  0% { transform:rotate(-.65deg) skewX(-.2deg) translateX(-.4px); }
+  45% { transform:rotate(.2deg) skewX(.3deg) translateX(.5px); }
+  100% { transform:rotate(.85deg) skewX(.5deg) translateX(1px); }
+}
+.atmosphere-canvas { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
+@media (max-width:760px) {
+  .world-bar-actions { gap:12px; }
+  .ambience-toggle { font-size:11px; }
+  .world-bar h2 { font-size:12px; }
+}
