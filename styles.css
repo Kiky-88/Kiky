@@ -374,3 +374,41 @@ kbd { display: inline-grid; place-items: center; min-width: 19px; height: 20px; 
   .world-controls .desktop-world-hint { display: none; }
   .world-controls .touch-world-hint { display: inline; }
 }
+/* Omen-inspired midnight blue, violet shadows, and cool cyan highlights. */
+:root {
+  --bg: #f1eff8; --surface: #fbfaff; --raised: #e5e2f2;
+  --text: #222441; --muted: #62617c; --line: #d0cce2;
+  --accent: #6251a6; --lime: #276e86; --accent-soft: #e4def5;
+}
+[data-theme='dark'] {
+  --bg: #0d1020; --surface: #171c33; --raised: #222944;
+  --text: #e8e7f4; --muted: #a7acc8; --line: #373e60;
+  --accent: #aaa0ed; --lime: #8edce8; --accent-soft: #302b50;
+  --grid: #9e9add05;
+}
+body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; transition: opacity 200ms ease, transform 200ms ease; }
+body.page-leaving { opacity: 0; transform: translateY(-3px); pointer-events: none; }
+@keyframes page-arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.main-content { animation: page-arrive 260ms ease both; }
+.button-primary { color: #101426; }
+.button-primary:hover { background: var(--lime); border-color: var(--lime); color: #101426; }
+[data-theme='light'] .button-primary { color: #fff; }
+.world-stage { background: #0c1224; }
+.world-portal { border-color: #72749d; background: #1d2540ed; color: #e8e7f4; }
+.world-portal:hover, .world-portal[aria-pressed='true'] { border-color: #8edce8; background: #39335b; }
+.portal-symbol { color: #aaa0ed; }
+.world-portal[aria-pressed='true'] .portal-symbol { color: #8edce8; }
+.world-coordinate, .world-compass, .world-spawn-label { color: #a7acc8; }
+.world-compass span { color: #8edce8; }
+.school-top img { width: 72px; height: 72px; }
+.school-top > span { width: 72px; }
+.education-card { grid-template-columns: 82px minmax(0,1fr); gap: 2px 23px; padding: 24px; }
+@media (max-width: 760px) {
+  .school-top img { width: 64px; height: 64px; }
+  .school-top > span { width: 64px; }
+  .education-card { grid-template-columns: 70px minmax(0,1fr); gap: 2px 16px; padding: 19px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body, .main-content { animation: none; transition: none; }
+  body.page-leaving { transform: none; }
+}

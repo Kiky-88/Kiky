@@ -7,7 +7,7 @@ function setTheme(theme) {
   const isDark = theme === 'dark';
   themeToggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
   themeToggle.setAttribute('aria-pressed', String(isDark));
-  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0f1923' : '#ece8e1';
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0d1020' : '#f1eff8';
 }
 setTheme(document.documentElement.dataset.theme);
 themeToggle.addEventListener('click', () => {
@@ -118,3 +118,33 @@ filterButtons.forEach(button => button.addEventListener('click', () => {
     group.hidden = ![...group.querySelectorAll('.publication')].some(article => !article.hidden);
   });
 }));
+// A brief shared transition keeps direct navigation smooth without delaying map travel.
+(() => {
+  let navigating = false;
+  const reset = () => {
+    navigating = false;
+    document.body.classList.remove('page-leaving');
+    document.body.removeAttribute('aria-busy');
+  };
+  window.addEventListener('pageshow', reset);
+  window.navigatePage = href => {
+    if (navigating) return;
+    const target = new URL(href, window.location.href);
+    if (target.origin !== window.location.origin) { window.location.assign(target.href); return; }
+    navigating = true;
+    if (reducedMotion.matches) { window.location.assign(target.href); return; }
+    document.body.classList.add('page-leaving');
+    document.body.setAttribute('aria-busy', 'true');
+    window.setTimeout(() => window.location.assign(target.href), 200);
+  };
+  document.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target.closest('a[href]');
+    if (!link || link.target || link.hasAttribute('download')) return;
+    const target = new URL(link.href, window.location.href);
+    if (target.origin !== window.location.origin || !/\.html$/.test(target.pathname)) return;
+    if (target.pathname === window.location.pathname) return;
+    event.preventDefault();
+    window.navigatePage(target.href);
+  });
+})();
