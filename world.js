@@ -6,6 +6,7 @@
   const { width: W, height: H, places, nodes, findPath, moveOnRoad } = ResearchWorldCore;
   const spawn = nodes[0];
   const player = { ...spawn, facing: 1 };
+  let idleTime=0, stride=0, gait=0, heading=0, lean=0;
   const keys = new Set();
   const portals = [...document.querySelectorAll('.world-portal')];
   const hint = document.querySelector('.world-spawn-label');
@@ -53,20 +54,69 @@
       trace([[player.x,player.y],...path.map(p=>[p.x,p.y])],'#a8c8df80',1);
       ctx.setLineDash([]);ctx.lineDashOffset=0;
     }
-    const unit=Math.max(1,0.45*pixelRatio/Math.min(scaleX,scaleY));
-    ctx.save();ctx.translate(player.x,player.y);ctx.scale(unit,unit);
-    ctx.fillStyle='#070b18a0';ctx.beginPath();ctx.ellipse(0,4,8,3,0,0,Math.PI*2);ctx.fill();
-    const cloak=ctx.createLinearGradient(-7,-8,7,5);
-    cloak.addColorStop(0,'#8986be');cloak.addColorStop(.45,'#4c507f');cloak.addColorStop(1,'#212c48');
-    ctx.fillStyle=cloak;ctx.beginPath();ctx.moveTo(-5,-10);ctx.bezierCurveTo(-6,-4,-7,1,-7,5);
-    ctx.quadraticCurveTo(0,8,7,5);ctx.bezierCurveTo(7,0,6,-6,5,-10);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#444c76';ctx.beginPath();ctx.ellipse(0,-11,5.8,6.5,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#17223a';ctx.beginPath();ctx.ellipse(0,-11,3.6,4.5,0,0,Math.PI*2);ctx.fill();
-    ctx.shadowColor='#9bcfdd';ctx.shadowBlur=3;ctx.fillStyle='#b4e3ee';
-    for(const x of [-2,0,2])ctx.fillRect(x,-13,.7,4);
-    ctx.shadowBlur=0;ctx.restore();
+    drawCharacter();
     hint.style.left=`${player.x/W*100}%`;hint.style.top=`${(player.y+14)/H*100}%`;
   }
+  // Articulated little shadow mage: feet stay planted at the navigation position.
+  function drawCharacter() {
+    const unit=Math.max(1.18,0.55*pixelRatio/Math.min(scaleX,scaleY));
+    const t=quietMotion.matches?0:idleTime;
+    const breath=Math.sin(t*2.7)*.55*(1-gait);
+    const step=Math.sin(stride), lift=Math.abs(Math.cos(stride));
+    const bob=breath-gait*(1-lift)*1.1;
+    const swing=step*gait, sway=Math.sin(t*2.1)*.7+lean*1.1;
+    const side=Math.sin(heading), back=Math.cos(heading)<-.45;
+    const shape=(points,fill,stroke)=>{
+      ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
+      ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=.65;ctx.stroke();}
+    };
+    const oval=(x,y,rx,ry,fill)=>{ctx.fillStyle=fill;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();};
+    ctx.save();ctx.translate(player.x,player.y);ctx.scale(unit,unit);
+    oval(0,1,9-gait*.6,2.9,'#05091588');
+    // Split ribbon tails follow the body with a delayed, springy silhouette.
+    shape([[-6,-15+bob],[-12-sway,-9+bob],[-10-sway,1+bob],[-6,-3+bob],[1,-12+bob]],'#39385f','#7773a8');
+    shape([[5,-14+bob],[10-sway,-8+bob],[12-sway,-2+bob],[7,-4+bob],[0,-12+bob]],'#514977','#8b7cb3');
+    // Alternating boots and hands make the walking cycle readable even at map scale.
+    oval(-3.3,-.8+swing*2,2.3,2.4,'#202b44');
+    oval(3.3,-.8-swing*2,2.3,2.4,'#263650');
+    oval(-7.2,-8+bob-swing*1.4,2.1,3,'#68749b');
+    oval(7.2,-8+bob+swing*1.4,2.1,3,'#657395');
+    const cloak=ctx.createLinearGradient(-7,-17,7,0);
+    cloak.addColorStop(0,'#a09bc7');cloak.addColorStop(.4,'#68658f');cloak.addColorStop(1,'#2c3653');
+    shape([[-5,-17+bob],[4,-17+bob],[7+sway*.25,-2+bob],[3,.5+bob],[0,-1+bob],[-4,1+bob],[-7+sway*.25,-2+bob]],cloak,'#8e8ab5');
+    trace([[-3,-13+bob],[-4,-5+bob],[-3,-2+bob]],'#b3afcf70',.8);
+    trace([[3,-12+bob],[4,-4+bob]],'#252f4d',1);
+    // Oversized hood, soft rim and three cyan face slits recall Omen.
+    const hx=side*1.5+lean*.6, hy=-19+bob;
+    const hood=ctx.createLinearGradient(hx-7,hy-8,hx+6,hy+7);
+    hood.addColorStop(0,'#b1a4d5');hood.addColorStop(.4,'#736b9e');hood.addColorStop(1,'#374663');
+    oval(hx,hy,8.1,8.8,hood);
+    trace([[hx-6,hy-4],[hx-3,hy-7],[hx+1,hy-7.8]],'#d4c4eb90',.85);
+    if(!back){
+      oval(hx+side*1.3,hy+1,5.5-Math.abs(side)*.8,6.1,'#111e33');
+      const blink=Math.sin(t*.7)> .995 ? .4:1;
+      ctx.shadowColor='#91efff';ctx.shadowBlur=4;
+      for(let i=-1;i<=1;i++){
+        const x=hx+side*2+i*2.2;
+        trace([[x-.25,hy-1],[x,hy+2.7*blink]],'#b4f4ff',1.1);
+      }
+      ctx.shadowBlur=0;
+    }else{
+      trace([[hx,hy-6],[hx-1,hy],[hx,hy+6]],'#b4a6d050',.8);
+    }
+    shape([[-5,-12+bob],[0,-9+bob],[5,-12+bob],[3,-7+bob],[-2,-6+bob]],'#7f81ac','#adb2d080');
+    oval(1,-8+bob,1.1,1.1,'#a5e5ef');
+    // A quiet wisp curls beside the idle character; movement pulls it behind.
+    if(!quietMotion.matches){
+      const wx=-10-side*3+Math.sin(t*1.8)*1.5, wy=-17+Math.cos(t*2)*2;
+      ctx.globalAlpha=.45;
+      trace([[wx+2,wy+4],[wx-1,wy],[wx+1,wy-3]],'#a4d6ee',.75);
+      oval(wx+1,wy-3,.8,.8,'#c5edfa');ctx.globalAlpha=1;
+    }
+    ctx.restore();
+  }
+  // Share the atmosphere's visibility/pause-aware 24fps clock for idle animation.
+  window.animateWorldCharacter=time=>{idleTime=time;draw();};
   function resize() {
     const box=canvas.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
     pixelRatio=dpr;canvas.width=Math.round(box.width*dpr);canvas.height=Math.round(box.height*dpr);
@@ -96,6 +146,7 @@
     else window.location.assign(places[id].href);
   }
   function update(dt) {
+    const previousX=player.x, previousY=player.y;
     let dx=0,dy=0;
     if(keys.has('a')||keys.has('arrowleft'))dx--;
     if(keys.has('d')||keys.has('arrowright'))dx++;
@@ -126,6 +177,11 @@
       moving=true;
       if(!path.length&&travelDestination){enterPlace(travelDestination);return;}
     }
+    const mx=player.x-previousX,my=player.y-previousY,distance=Math.hypot(mx,my);
+    const walking=distance>.01;
+    gait+=(Number(walking)-gait)*(1-Math.exp(-22*dt));
+    if(walking){stride+=Math.min(distance,10)*.32;heading=Math.atan2(mx,my);}
+    lean+=(Math.sin(heading)*gait-lean)*(1-Math.exp(-14*dt));
     if(!moving||entering||travelDestination)return;
     const nearby=Object.entries(places).find(([_,p])=>Math.hypot(p.x-player.x,p.y-player.y)<12);
     if(nearby){selectPlace(nearby[0],false);enterPlace(nearby[0]);}
@@ -135,7 +191,7 @@
     const dt=lastTime?Math.min((time-lastTime)/1000,.04):.016;
     lastTime=time;update(dt);
     const effectsMoving=updateEffects(dt);draw();
-    if(keys.size||path.length||effectsMoving)frame=requestAnimationFrame(tick);
+    if(keys.size||path.length||effectsMoving||gait>.01)frame=requestAnimationFrame(tick);
     else lastTime=0;
   }
   function wake(){if(frame===null)frame=requestAnimationFrame(tick);}
@@ -165,7 +221,7 @@
   canvas.addEventListener('blur',()=>keys.clear());
   document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();path=[];}});
   document.querySelector('.world-reset').addEventListener('click',()=>{
-    keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=spawn.x;player.y=spawn.y;player.facing=1;selected=null;
+    keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=spawn.x;player.y=spawn.y;player.facing=1;gait=0;stride=0;heading=0;lean=0;selected=null;
     portals.forEach(button=>button.setAttribute('aria-pressed','false'));
     draw();
   });

@@ -2,10 +2,10 @@
 (() => {
   const width = 980, height = 560;
   const places = {
-    publications: { x: 235, y: 215, title: 'Publications', href: 'publications.html?v=20261123-roads1' },
-    experience: { x: 750, y: 215, title: 'Experience', href: 'experience.html?v=20261123-roads1' },
-    education: { x: 235, y: 485, title: 'Education', href: 'education.html?v=20261123-roads1' },
-    beyond: { x: 750, y: 485, title: 'Beyond CS', href: 'beyond.html?v=20261123-roads1' }
+    publications: { x: 235, y: 215, title: 'Publications', href: 'publications.html?v=20261123-mage1' },
+    experience: { x: 750, y: 215, title: 'Experience', href: 'experience.html?v=20261123-mage1' },
+    education: { x: 235, y: 485, title: 'Education', href: 'education.html?v=20261123-mage1' },
+    beyond: { x: 750, y: 485, title: 'Beyond CS', href: 'beyond.html?v=20261123-mage1' }
   };
   const nodes = [
     {x:490,y:255}, {x:235,y:255}, {x:750,y:255},

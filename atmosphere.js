@@ -36,6 +36,7 @@
     ctx.fillStyle=gradient;ctx.fillRect(-1,-1,2,2);ctx.restore();
   }
   function render(time) {
+    if(window.animateWorldCharacter)window.animateWorldCharacter(time);
     ctx.setTransform(scaleX,0,0,scaleY,0,0);ctx.clearRect(0,0,W,H);
     const gust=0.75+Math.sin(time*.43)*.25;
     // A slow change in reflected light gives each house an individual rhythm.
