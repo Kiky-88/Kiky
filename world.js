@@ -65,7 +65,7 @@
     const step=Math.sin(stride), lift=Math.abs(Math.cos(stride));
     const bob=breath-gait*(1-lift)*1.1;
     const swing=step*gait, sway=Math.sin(t*2.1)*.7+lean*1.1;
-    const side=Math.sin(heading), back=Math.cos(heading)<-.45;
+    const side=Math.sin(heading);
     const shape=(points,fill,stroke)=>{
       ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
       ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=.65;ctx.stroke();}
@@ -92,7 +92,7 @@
     hood.addColorStop(0,'#b1a4d5');hood.addColorStop(.4,'#736b9e');hood.addColorStop(1,'#374663');
     oval(hx,hy,8.1,8.8,hood);
     trace([[hx-6,hy-4],[hx-3,hy-7],[hx+1,hy-7.8]],'#d4c4eb90',.85);
-    if(!back){
+    {
       oval(hx+side*1.3,hy+1,5.5-Math.abs(side)*.8,6.1,'#111e33');
       const blink=Math.sin(t*.7)> .995 ? .4:1;
       ctx.shadowColor='#91efff';ctx.shadowBlur=4;
@@ -101,8 +101,6 @@
         trace([[x-.25,hy-1],[x,hy+2.7*blink]],'#b4f4ff',1.1);
       }
       ctx.shadowBlur=0;
-    }else{
-      trace([[hx,hy-6],[hx-1,hy],[hx,hy+6]],'#b4a6d050',.8);
     }
     shape([[-5,-12+bob],[0,-9+bob],[5,-12+bob],[3,-7+bob],[-2,-6+bob]],'#7f81ac','#adb2d080');
     oval(1,-8+bob,1.1,1.1,'#a5e5ef');
