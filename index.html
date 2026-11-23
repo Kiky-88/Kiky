@@ -9,6 +9,7 @@
   <title>About · Yun-Ta Hsieh</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
+  <link rel="preload" as="image" href="images/campus-night-v2.webp" fetchpriority="high" />
   <script>try{document.documentElement.dataset.theme=localStorage.getItem('homepage-theme')==='light'?'light':'dark'}catch(e){}</script>
 </head>
 <body id="top" class="world-page">
@@ -37,32 +38,31 @@
     </aside>
     <div class="main-content">
     <section class="intro-section" id="about" aria-labelledby="hero-title">
-      <div class="intro-topline"><span class="eyebrow">WELCOME TO MY WORLD</span><span class="terminal-tag" aria-hidden="true">RESEARCH / DESIGN / EXPLORATION</span></div>
-      <h1 id="hero-title">YUN-TA HSIEH<span class="hero-slash" aria-hidden="true"> / </span></h1><p class="world-subtitle">Efficient AI. Multimodal systems. A world to explore.</p>
+      <div class="intro-topline"><span class="eyebrow">RESEARCH &amp; EXPLORATION</span><span class="terminal-tag" aria-hidden="true"></span></div>
+      <h1 id="hero-title">Yun-Ta Hsieh</h1><p class="world-subtitle">Efficient AI, multimodal systems, and a little curiosity.</p>
 
 
     </section>
 
     <section class="research-world" aria-labelledby="world-title">
-      <div class="world-bar"><h2 id="world-title">THE RESEARCH GROUNDS</h2><button class="world-reset" type="button" aria-label="Return explorer to starting position">Reset position</button></div>
+      <div class="world-bar"><h2 id="world-title">The research grounds</h2><button class="world-reset" type="button" aria-label="Return explorer to starting position">Reset position</button></div>
       <div class="world-stage">
+        <img class="world-art" src="images/campus-night-v2.webp" alt="A miniature night-time campus with four illuminated buildings, violet gardens, and connected stone paths." width="1659" height="948" fetchpriority="high" decoding="async" />
         <canvas id="research-map" width="980" height="560" tabindex="0" aria-label="Interactive research campus. Use WASD or arrow keys to move. Choose a labeled destination or use the links below."></canvas>
-        <div class="world-coordinate" aria-hidden="true">KIKY / PERSONAL CAMPUS</div>
-        <div class="world-compass" aria-hidden="true">N<span>+</span></div>
         <nav class="world-portals" aria-label="Map destinations">
-          <button class="world-portal" type="button" data-place="publications" style="--x:24.5%;--y:27%"><span class="portal-symbol" aria-hidden="true">▤</span>Publications</button>
-          <button class="world-portal" type="button" data-place="experience" style="--x:74.5%;--y:26%"><span class="portal-symbol" aria-hidden="true">◇</span>Experience</button>
-          <button class="world-portal" type="button" data-place="education" style="--x:24.5%;--y:72%"><span class="portal-symbol" aria-hidden="true">⌂</span>Education</button>
-          <button class="world-portal" type="button" data-place="beyond" style="--x:74.5%;--y:72%"><span class="portal-symbol" aria-hidden="true">✧</span>Beyond CS</button>
+          <button class="world-portal" type="button" data-place="publications" style="--x:24%;--y:21%" aria-label="Enter Publications"><span class="portal-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6a3 3 0 0 1 3 3v13a4 4 0 0 0-4-3H4zM20 5h-4a3 3 0 0 0-3 3v13a4 4 0 0 1 4-3h3z"/></svg><span>Publications</span></span></button>
+          <button class="world-portal" type="button" data-place="experience" style="--x:76.5%;--y:21%" aria-label="Enter Experience"><span class="portal-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M8 15h8"/></svg><span>Experience</span></span></button>
+          <button class="world-portal" type="button" data-place="education" style="--x:24%;--y:65.5%" aria-label="Enter Education"><span class="portal-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-5 9 5-9 5zM6 11v6c4 3 8 3 12 0v-6M21 9v7"/></svg><span>Education</span></span></button>
+          <button class="world-portal" type="button" data-place="beyond" style="--x:76.5%;--y:66%" aria-label="Enter Beyond CS"><span class="portal-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 19 8-15 8 15H4zM9 14h6M12 4v15"/></svg><span>Beyond CS</span></span></button>
         </nav>
         <span class="world-spawn-label" aria-hidden="true">YOU</span>
       </div>
       <div class="world-controls"><p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>or arrow keys to move</span></p><p><span class="desktop-world-hint">Click a destination to enter &middot; or walk to a doorway</span><span class="touch-world-hint">Tap any building to enter.</span></p></div>
-      <div class="world-selection" aria-live="polite"><div><p class="eyebrow" id="destination-kicker">START EXPLORING</p><h3 id="destination-title">A few paths. One curious mind.</h3><p id="destination-description">Select any building to enter its page. You can also explore the campus along the paths.</p></div><a class="button button-primary destination-link" id="destination-link" href="publications.html">View publications</a></div>
+      <div class="world-selection" aria-live="polite"><div><p class="eyebrow" id="destination-kicker">EXPLORE THE CAMPUS</p><h3 id="destination-title">Choose your next stop.</h3><p id="destination-description">Four places to explore. Select a building, or take a walk along the paths.</p></div><a class="button button-primary destination-link" id="destination-link" href="publications.html">View publications</a></div>
       <nav class="world-fast-travel" aria-label="Direct page links"><span>DIRECT ACCESS</span><a href="publications.html">Publications</a><a href="experience.html">Experience</a><a href="education.html">Education</a><a href="beyond.html">Beyond CS</a><a href="images/Yunta_Hsieh_CV.pdf" target="_blank" rel="noreferrer">CV</a></nav>
     </section>
-    <section class="about-brief" aria-labelledby="about-brief-title"><p class="eyebrow">BEHIND THE EXPLORER</p><h2 id="about-brief-title">A little about me</h2><div class="intro-copy"><p>I’m <strong>Yun-Ta Hsieh</strong>, a researcher working on efficient AI, multimodal systems, and agents that interact with the world.</p><p>I am pursuing my M.A.S. in Computer Science at the <a href="https://www.upenn.edu/" target="_blank" rel="noreferrer">University of Pennsylvania</a>. At <a href="https://www.osu.edu/" target="_blank" rel="noreferrer">The Ohio State University</a>, I work with Prof. <a href="https://mi-zhang.github.io/" target="_blank" rel="noreferrer">Mi Zhang</a> in the AIoT and Machine Learning Systems Lab.</p><p>My background in architecture and digital fabrication shapes how I approach models, interfaces, and real-world constraints.</p></div></section>
-    <section class="contact-section" id="contact" aria-labelledby="contact-title"><div><p class="eyebrow">CONTACT</p><h2 id="contact-title">Let’s build something interesting.</h2><p>Based in Ann Arbor, MI. Have a shared interest or an idea to explore? I’d love to hear from you.</p><a class="contact-email" href="mailto:yunta@engineering.upenn.edu">yunta@engineering.upenn.edu</a></div></section>
+    <section class="about-brief" aria-labelledby="about-brief-title"><p class="eyebrow">ABOUT</p><h2 id="about-brief-title">A little about me</h2><div class="intro-copy"><p>I’m <strong>Yun-Ta Hsieh</strong>, a researcher working on efficient AI, multimodal systems, and agents that interact with the world.</p><p>I am pursuing my M.A.S. in Computer Science at the <a href="https://www.upenn.edu/" target="_blank" rel="noreferrer">University of Pennsylvania</a>. At <a href="https://www.osu.edu/" target="_blank" rel="noreferrer">The Ohio State University</a>, I work with Prof. <a href="https://mi-zhang.github.io/" target="_blank" rel="noreferrer">Mi Zhang</a> in the AIoT and Machine Learning Systems Lab.</p><p>My background in architecture and digital fabrication shapes how I approach models, interfaces, and real-world constraints.</p></div></section>
+    <section class="contact-section" id="contact" aria-labelledby="contact-title"><div><p class="eyebrow">CONTACT</p><h2 id="contact-title">Get in touch</h2><p>Based in Ann Arbor, MI. Have a shared interest or an idea to explore? I’d love to hear from you.</p><a class="contact-email" href="mailto:yunta@engineering.upenn.edu">yunta@engineering.upenn.edu</a></div></section>
     <footer><a class="brand" href="index.html"><svg class="brand-mark" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 2h6v6H2zm10 0h6v6h-6zM2 12h6v6H2z"/><path class="mark-lime" d="M12 12h6v6h-6z"/></svg> kiky<span class="brand-dot">_</span></a><p>Yun-Ta Hsieh · Research</p><a href="#top" data-back-to-top>Back to top</a></footer>
     </div>
   </main>

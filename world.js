@@ -3,8 +3,9 @@
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  const { width: W, height: H, buildings, places, nodes, roads, walkable, findPath, moveAlongRoad, project } = ResearchWorldCore;
-  const player = { x: 490, y: 290, facing: 1 };
+  const { width: W, height: H, places, nodes, findPath, moveAlongRoad, project } = ResearchWorldCore;
+  const spawn = nodes[0];
+  const player = { ...spawn, facing: 1 };
   const keys = new Set();
   const portals = [...document.querySelectorAll('.world-portal')];
   const hint = document.querySelector('.world-spawn-label');
@@ -27,114 +28,61 @@
     return moving;
   }
   let scaleX = 1, scaleY = 1, pixelRatio = 1;
-  const polygon = (points, fill, stroke) => {
-    ctx.beginPath(); points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y)); ctx.closePath();
-    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke(); }
-  };
-  function line(points, color, size = 1) {
-    ctx.beginPath(); points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
-    ctx.strokeStyle = color; ctx.lineWidth = size; ctx.stroke();
-  }
-  function building(b, i) {
-    const {x,y:groundY,w,h} = b;
-    const glow = effects[buildingIds[i]] || 0;
-    const y = groundY - glow*6;
-    ctx.save();
-    if (glow>0.01) {
-      ctx.strokeStyle=`rgba(142,220,232,${glow*0.6})`;
-      ctx.lineWidth=1.5;
-      ctx.strokeRect(x-5,groundY-5,w+16,h+26);
-      ctx.fillStyle=`rgba(150,133,218,${glow*0.1})`;
-      ctx.fillRect(x-7,groundY-7,w+20,h+30);
-    }
-    ctx.fillStyle = '#07141a70'; ctx.fillRect(x+12,groundY+14,w+9,h+13);
-    polygon([[x,y+h],[x+w,y+h],[x+w,y+h+14],[x,y+h+14]], '#1d2340', '#5d638e');
-    polygon([[x+w,y],[x+w+10,y+10],[x+w+10,y+h+14],[x+w,y+h]], '#292e50', '#5d638e');
-    polygon([[x,y+12],[x+12,y],[x+w,y],[x+w,y+h],[x,y+h]], i===4?'#4a4d7b':`rgb(${52+Math.round(glow*12)},${59+Math.round(glow*13)},${101+Math.round(glow*20)})`, '#8587b6');
-    ctx.strokeStyle = '#4e5685'; ctx.lineWidth = 2;
-    ctx.strokeRect(x+12,y+14,w-24,h-29);
-    ctx.fillStyle = i===4 ? '#85b2ac' : '#202846';
-    for(let col=0;col<Math.floor((w-30)/30);col++) ctx.fillRect(x+20+col*30,y+24,18,8);
-    if (b.type === 'lab') {
-      ctx.fillStyle='#787aa8'; ctx.fillRect(x+24,y+50,45,27); ctx.fillRect(x+88,y+50,45,27);
-      line([[x+24,y+86],[x+w-24,y+86]],'#9ae5ee',3);
-    } else if (b.type === 'library') {
-      for(let j=0;j<3;j++){ctx.fillStyle='#5b6292';ctx.fillRect(x+24+j*45,y+50,30,35);line([[x+28+j*45,y+56],[x+48+j*45,y+56]],'#abdfe9',2);}
-    } else if (b.type === 'academy') {
-      polygon([[x+30,y+69],[x+w/2,y+25],[x+w-30,y+69]],'#4c5486','#8e94bd');
-      for(let j=0;j<4;j++){ctx.fillStyle='#b0b3d0';ctx.fillRect(x+44+j*27,y+70,7,19);}
-    } else if (b.type === 'studio') {
-      polygon([[x+22,y+76],[x+66,y+30],[x+105,y+76]],'#686b9e','#b0b4dc');
-      polygon([[x+83,y+76],[x+124,y+35],[x+157,y+76]],'#3e4777','#8c9cc4');
-    } else {
-      ctx.fillStyle='#a5e9f2';ctx.fillRect(x+w/2-3,y+21,6,28);
-      line([[x+w/2-17,y+34],[x+w/2+17,y+34]],'#a5e9f2',3);
-    }
-    ctx.shadowColor='#8edce8';ctx.shadowBlur=glow*14;
-    ctx.fillStyle = '#8edce8';ctx.fillRect(x+w/2-13,y+h+2,26,4+glow*2);
-    ctx.shadowBlur=0;
-    ctx.fillStyle='#282e50';ctx.fillRect(x+w/2-19,groundY+h+14,38,6);
-    ctx.restore();
+  function trace(points,color,width=1) {
+    ctx.beginPath();
+    points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));
+    ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();
   }
   function draw() {
     ctx.setTransform(scaleX,0,0,scaleY,0,0);
-    ctx.fillStyle='#0c1224';ctx.fillRect(0,0,W,H);
-    for(let y=15;y<H;y+=28) for(let x=15;x<W;x+=30) {ctx.fillStyle='#303654';ctx.fillRect(x,y,1,1);}
-    polygon([[45,75],[95,35],[889,35],[938,83],[938,475],[892,524],[92,524],[45,477]],'#19223b','#4c527c');
-    polygon([[57,82],[102,49],[881,49],[924,89],[924,467],[885,510],[100,510],[59,469]],null,'#333e63');
-    // Rendering uses exactly the same centerlines as keyboard movement and travel.
-    roads.forEach(road => {
-      const a=nodes[road.a], b=nodes[road.b];
-      line([[a.x,a.y],[b.x,b.y]],'#303a56',road.w);
-      line([[a.x,a.y],[b.x,b.y]],'#8291bc30',1);
-    });
-    for(const [x,y] of [[92,118],[90,285],[875,290],[90,420],[875,415],[390,425],[590,425],[385,167],[595,167]]) {
-      ctx.fillStyle='#111a30';ctx.fillRect(x-15,y-8,32,24);
-      ctx.fillStyle='#343c61';ctx.beginPath();ctx.ellipse(x,y-3,15,12,0,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='#51567a';ctx.beginPath();ctx.ellipse(x-3,y-7,10,8,0,0,Math.PI*2);ctx.fill();
-    }
-    polygon([[450,265],[470,246],[514,246],[534,266],[534,309],[513,329],[469,329],[450,310]],'#262d52','#7777b0');
-    polygon([[466,271],[482,260],[502,260],[518,276],[518,301],[503,316],[480,316],[466,303]],null,'#6268a0');
-    line([[477,288],[504,288]],'#8edce8',2);line([[490,275],[490,301]],'#8edce8',2);
-    buildings.forEach(building);
-    // Location pads are symbolic entries to the independent content pages.
-    Object.entries(places).forEach(([id,p])=>{
-      const active=selected===id;
-      ctx.fillStyle=active?'#8edce8':'#9a91c9';ctx.fillRect(p.x-10,p.y-4,20,4);
-      if(active){
-        ctx.strokeStyle='#8edce880';ctx.lineWidth=1;
-        ctx.beginPath();ctx.ellipse(p.x,p.y-1,19,10,0,0,Math.PI*2);ctx.stroke();
-        ctx.strokeStyle='#a49ade66';ctx.beginPath();ctx.ellipse(p.x,p.y-1,25,14,0,0,Math.PI*2);ctx.stroke();
-      }
+    ctx.clearRect(0,0,W,H);
+    // The architectural illustration sits beneath this transparent interaction layer.
+    // Only restrained light and character details are drawn over the scene.
+    buildingIds.forEach(id=>{
+      const glow=effects[id];if(glow<0.01)return;
+      const p=places[id];
+      const halo=ctx.createRadialGradient(p.x,p.y-30,0,p.x,p.y-30,60);
+      halo.addColorStop(0,`rgba(158,189,239,${0.14*glow})`);
+      halo.addColorStop(1,'rgba(158,189,239,0)');
+      ctx.fillStyle=halo;ctx.fillRect(p.x-60,p.y-90,120,120);
+      ctx.strokeStyle=`rgba(181,222,237,${0.5*glow})`;ctx.lineWidth=1;
+      ctx.beginPath();ctx.ellipse(p.x,p.y,11,5,0,0,Math.PI*2);ctx.stroke();
     });
     if(path.length){
-      ctx.setLineDash([4,6]);ctx.lineDashOffset=-travelElapsed*45;line([[player.x,player.y],...path.map(p=>[p.x,p.y])],'#a4b2de',1.5);ctx.setLineDash([]);ctx.lineDashOffset=0;
+      ctx.setLineDash([2,7]);ctx.lineDashOffset=-travelElapsed*30;
+      trace([[player.x,player.y],...path.map(p=>[p.x,p.y])],'#a8c8df80',1);
+      ctx.setLineDash([]);ctx.lineDashOffset=0;
     }
-    // Original explorer marker; no game characters or copyrighted art.
-    const unit = Math.max(1, 0.8 * pixelRatio / Math.min(scaleX,scaleY));
+    const unit=Math.max(1,0.45*pixelRatio/Math.min(scaleX,scaleY));
     ctx.save();ctx.translate(player.x,player.y);ctx.scale(unit,unit);
-    ctx.fillStyle='#07121b80';ctx.beginPath();ctx.ellipse(0,7,11,5,0,0,Math.PI*2);ctx.fill();
-    polygon([[-9,-3],[-7,9],[7,9],[9,-3],[0,-8]],'#6a63a8','#b2a8ec');
-    polygon([[-7,-13],[0,-18],[7,-13],[6,-4],[-6,-4]],'#44466f','#8c88bf');
-    ctx.fillStyle='#10172c';ctx.fillRect(-4,-12,8,7);
-    ctx.fillStyle='#8edce8';
-    for(const x of [-3,0,3])ctx.fillRect(x,-11,1,5);
-    ctx.restore();
-    hint.style.left=`${player.x/W*100}%`;hint.style.top=`${(player.y+25)/H*100}%`;
+    ctx.fillStyle='#070b18a0';ctx.beginPath();ctx.ellipse(0,4,8,3,0,0,Math.PI*2);ctx.fill();
+    const cloak=ctx.createLinearGradient(-7,-8,7,5);
+    cloak.addColorStop(0,'#8986be');cloak.addColorStop(.45,'#4c507f');cloak.addColorStop(1,'#212c48');
+    ctx.fillStyle=cloak;ctx.beginPath();ctx.moveTo(-5,-10);ctx.bezierCurveTo(-6,-4,-7,1,-7,5);
+    ctx.quadraticCurveTo(0,8,7,5);ctx.bezierCurveTo(7,0,6,-6,5,-10);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#444c76';ctx.beginPath();ctx.ellipse(0,-11,5.8,6.5,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#17223a';ctx.beginPath();ctx.ellipse(0,-11,3.6,4.5,0,0,Math.PI*2);ctx.fill();
+    ctx.shadowColor='#9bcfdd';ctx.shadowBlur=3;ctx.fillStyle='#b4e3ee';
+    for(const x of [-2,0,2])ctx.fillRect(x,-13,.7,4);
+    ctx.shadowBlur=0;ctx.restore();
+    hint.style.left=`${player.x/W*100}%`;hint.style.top=`${(player.y+14)/H*100}%`;
   }
   function resize() {
     const box=canvas.getBoundingClientRect(), dpr=Math.min(window.devicePixelRatio||1,2);
     pixelRatio=dpr;canvas.width=Math.round(box.width*dpr);canvas.height=Math.round(box.height*dpr);
     scaleX=canvas.width/W;scaleY=canvas.height/H;draw();
   }
-  function selectPlace(id, travel = true) {
+  function previewPlace(id) {
     const place=places[id];if(!place)return;
-    selected=id;
     document.querySelector('#destination-kicker').textContent=place.kicker;
     document.querySelector('#destination-title').textContent=place.title;
     document.querySelector('#destination-description').textContent=place.description;
     const link=document.querySelector('#destination-link');link.href=place.href;link.textContent=`Enter ${place.title}`;
+  }
+  function selectPlace(id, travel = true) {
+    const place=places[id];if(!place)return;
+    selected=id;
+    previewPlace(id);
     portals.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.place===id)));
     if(travel){
       entering=false;travelDestination=id;
@@ -202,7 +150,7 @@
   function wake(){if(frame===null)frame=requestAnimationFrame(tick);}
   portals.forEach(button=>{
     button.setAttribute('aria-pressed','false');
-    const focusBuilding=()=>{hovered=button.dataset.place;wake();};
+    const focusBuilding=()=>{hovered=button.dataset.place;previewPlace(hovered);wake();};
     const blurBuilding=()=>{if(hovered===button.dataset.place)hovered=null;wake();};
     button.addEventListener('pointerenter',focusBuilding);
     button.addEventListener('pointerleave',blurBuilding);
@@ -226,11 +174,11 @@
   canvas.addEventListener('blur',()=>keys.clear());
   document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();path=[];}});
   document.querySelector('.world-reset').addEventListener('click',()=>{
-    keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=490;player.y=290;player.facing=1;selected=null;
+    keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=spawn.x;player.y=spawn.y;player.facing=1;selected=null;
     portals.forEach(button=>button.setAttribute('aria-pressed','false'));
-    document.querySelector('#destination-kicker').textContent='START EXPLORING';
-    document.querySelector('#destination-title').textContent='A few paths. One curious mind.';
-    document.querySelector('#destination-description').textContent='Select any building to enter its page. You can also explore the campus along the paths.';
+    document.querySelector('#destination-kicker').textContent='EXPLORE THE CAMPUS';
+    document.querySelector('#destination-title').textContent='Choose your next stop.';
+    document.querySelector('#destination-description').textContent='Four places to explore. Select a building, or take a walk along the paths.';
     const link=document.querySelector('#destination-link');link.href='publications.html';link.textContent='View publications';draw();
   });
   new ResizeObserver(resize).observe(canvas);resize();

@@ -1,25 +1,18 @@
-﻿/* One road graph drives drawing, pathfinding, and collision-free movement. */
+/* One road graph drives drawing, pathfinding, and collision-free movement. */
 (() => {
   const width = 980, height = 560;
-  const buildings = [
-    { x: 150, y: 80, w: 180, h: 120, type: 'library' },
-    { x: 650, y: 80, w: 170, h: 120, type: 'lab' },
-    { x: 150, y: 350, w: 180, h: 110, type: 'academy' },
-    { x: 650, y: 350, w: 180, h: 110, type: 'studio' },
-    { x: 432, y: 75, w: 116, h: 65, type: 'tower' }
-  ];
   const places = {
-    publications: { x: 250, y: 250, title: 'Publications', kicker: 'THE ARCHIVE', description: 'Efficient AI, multimodal models, and agent evaluation. Explore 12 publications and manuscripts, including QuantVLA and OS-Omni.', href: 'publications.html' },
-    experience: { x: 730, y: 250, title: 'Experience', kicker: 'THE SYSTEMS LAB', description: 'Research at The Ohio State University and an internship at TouchstoneAI. From low-bit inference to coding-agent evaluation.', href: 'experience.html' },
-    education: { x: 250, y: 490, title: 'Education', kicker: 'THE ACADEMY', description: 'A path through architecture, digital fabrication, and computer science at HUST, Michigan, and Penn.', href: 'education.html' },
-    beyond: { x: 730, y: 490, title: 'Beyond CS', kicker: 'THE DESIGN STUDIO', description: 'Architecture and computational making: Dissolved Skyscraper, 4D-City, and Serpentine Gallery.', href: 'beyond.html' }
+    publications: { x: 235, y: 215, title: 'Publications', kicker: 'THE ARCHIVE', description: 'Efficient AI, multimodal models, and agent evaluation. Explore 12 publications and manuscripts, including QuantVLA and OS-Omni.', href: 'publications.html' },
+    experience: { x: 750, y: 215, title: 'Experience', kicker: 'THE SYSTEMS LAB', description: 'Research at The Ohio State University and an internship at TouchstoneAI. From low-bit inference to coding-agent evaluation.', href: 'experience.html' },
+    education: { x: 235, y: 485, title: 'Education', kicker: 'THE ACADEMY', description: 'A path through architecture, digital fabrication, and computer science at HUST, Michigan, and Penn.', href: 'education.html' },
+    beyond: { x: 750, y: 485, title: 'Beyond CS', kicker: 'THE DESIGN STUDIO', description: 'Architecture and computational making: Dissolved Skyscraper, 4D-City, and Serpentine Gallery.', href: 'beyond.html' }
   };
   const nodes = [
-    {x:490,y:290}, {x:250,y:290}, {x:730,y:290},
-    {x:250,y:250}, {x:730,y:250}, {x:250,y:490},
-    {x:730,y:490}, {x:490,y:490}, {x:490,y:165}
+    {x:490,y:255}, {x:235,y:255}, {x:750,y:255},
+    {x:235,y:215}, {x:750,y:215}, {x:235,y:485},
+    {x:750,y:485}, {x:490,y:485}, {x:490,y:135}
   ];
-  const roads = [[0,1,38],[0,2,38],[1,3,38],[2,4,38],[1,5,32],[2,6,32],[5,7,32],[7,6,32],[0,7,28],[0,8,28]]
+  const roads = [[0,1,26],[0,2,26],[1,3,26],[2,4,26],[1,5,26],[2,6,26],[5,7,26],[7,6,26],[0,7,24],[0,8,24]]
     .map(([a,b,w]) => ({a,b,w}));
   const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
   function project(point) {
@@ -86,5 +79,5 @@
     }
     return {x:p.x,y:p.y};
   }
-  globalThis.ResearchWorldCore = { width,height,buildings,places,nodes,roads,walkable,findPath,moveAlongRoad,project };
+  globalThis.ResearchWorldCore = { width,height,places,nodes,roads,walkable,findPath,moveAlongRoad,project };
 })();
