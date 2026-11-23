@@ -2,15 +2,12 @@
 (() => {
   const stage = document.querySelector('.world-stage');
   const canvas = document.querySelector('.atmosphere-canvas');
-  const toggle = document.querySelector('.ambience-toggle');
-  if (!stage || !canvas || !toggle) return;
+  if (!stage || !canvas) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
   const W = 980, H = 560;
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let saved = null;
-  try { saved = sessionStorage.getItem('campus-motion'); } catch (_) {}
-  let enabled = !preference.matches && saved !== 'paused';
+  let enabled = !preference.matches;
   let inView = true, pageActive = true, frame = null, lastTime = null, paintedAt = null, elapsed = 0;
   let scaleX = 1, scaleY = 1;
   const particles = Array.from({length:22}, (_, i) => ({
@@ -75,8 +72,6 @@
   }
   function sync() {
     stage.dataset.ambient=active()?'playing':'paused';
-    toggle.setAttribute('aria-pressed',String(enabled));
-    toggle.textContent=enabled?'Pause motion':'Play motion';
     if(active()){
       if(frame===null)frame=requestAnimationFrame(tick);
     }else{
@@ -92,11 +87,6 @@
     scaleX=canvas.width/W;scaleY=canvas.height/H;
     if(enabled)render(elapsed);
   }
-  toggle.addEventListener('click',()=>{
-    enabled=!enabled;
-    try { sessionStorage.setItem('campus-motion',enabled?'playing':'paused'); } catch (_) {}
-    sync();
-  });
   preference.addEventListener('change',event=>{enabled=!event.matches;sync();});
   document.addEventListener('visibilitychange',sync);
   window.addEventListener('pagehide',()=>{pageActive=false;sync();});

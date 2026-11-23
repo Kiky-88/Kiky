@@ -71,7 +71,7 @@ events.get('canvas:keydown')({key:'w',preventDefault(){}});
 for(let i=0;i<3;i++)frames.shift()(clock+=16);
 events.get('window:keyup')({key:'d'});events.get('window:keyup')({key:'w'});flush();
 assert.ok(lastPlayer.x>beforeDiagonal.x+4 && lastPlayer.y<beforeDiagonal.y-4, 'Diagonal keyboard movement is constrained to a line');
-events.get('.world-reset:click')();flush();
+
 
 let maxDuration = 0;
 for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) {
@@ -91,5 +91,5 @@ for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) 
   maxDuration = Math.max(maxDuration, last.time - start);
 }
 assert.ok(maxDuration >= 740 && maxDuration <= 780, 'Teleport must finish its departure and arrival animation');
-events.get('.world-reset:click')(); flush();
-console.log(`PASS: calibrated renderer, exact road clicks, lateral/diagonal input, hover, 16 automatic entries, reset, max ${maxDuration}ms travel.`);
+
+console.log(`PASS: calibrated renderer, exact road clicks, lateral/diagonal input, hover, 16 automatic entries, max ${maxDuration}ms travel.`);

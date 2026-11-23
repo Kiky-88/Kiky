@@ -249,10 +249,5 @@
   window.addEventListener('keyup',event=>keys.delete(event.key.toLowerCase()));
   canvas.addEventListener('blur',()=>keys.clear());
   document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();path=[];teleport=null;travelDestination=null;}});
-  document.querySelector('.world-reset').addEventListener('click',()=>{
-    keys.clear();path=[];teleport=null;travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=spawn.x;player.y=spawn.y;player.facing=1;gait=0;stride=0;heading=0;lean=0;selected=null;
-    portals.forEach(button=>button.setAttribute('aria-pressed','false'));
-    draw();
-  });
   new ResizeObserver(resize).observe(canvas);resize();
 })();
