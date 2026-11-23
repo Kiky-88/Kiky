@@ -368,3 +368,9 @@ kbd { display: inline-grid; place-items: center; min-width: 19px; height: 20px; 
   .world-fast-travel { padding: 12px 17px; gap: 8px 15px; }
   .world-fast-travel > span { width: 100%; }
 }
+.world-controls .desktop-world-hint { display: inline-flex; align-items: center; gap: 4px; margin: 0; }
+.world-controls .touch-world-hint { display: none; margin: 0; }
+@media (max-width: 760px) {
+  .world-controls .desktop-world-hint { display: none; }
+  .world-controls .touch-world-hint { display: inline; }
+}
