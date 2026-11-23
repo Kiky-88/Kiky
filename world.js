@@ -72,24 +72,15 @@
     pixelRatio=dpr;canvas.width=Math.round(box.width*dpr);canvas.height=Math.round(box.height*dpr);
     scaleX=canvas.width/W;scaleY=canvas.height/H;draw();
   }
-  function previewPlace(id) {
-    const place=places[id];if(!place)return;
-    document.querySelector('#destination-kicker').textContent=place.kicker;
-    document.querySelector('#destination-title').textContent=place.title;
-    document.querySelector('#destination-description').textContent=place.description;
-    const link=document.querySelector('#destination-link');link.href=place.href;link.textContent=`Enter ${place.title}`;
-  }
   function selectPlace(id, travel = true) {
     const place=places[id];if(!place)return;
     selected=id;
-    previewPlace(id);
     portals.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.place===id)));
     if(travel){
       entering=false;travelDestination=id;
       path=findPath(player,place);
       const total=path.reduce((sum,p,i)=>sum+(i?Math.hypot(p.x-path[i-1].x,p.y-path[i-1].y):0),0);
       travelDistance=total;travelElapsed=0;travelProgress=0;
-      document.querySelector('#destination-kicker').textContent='ENTERING / '+place.kicker;
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         player.x=place.x;player.y=place.y;path=[];enterPlace(id);
       }else wake();
@@ -150,7 +141,7 @@
   function wake(){if(frame===null)frame=requestAnimationFrame(tick);}
   portals.forEach(button=>{
     button.setAttribute('aria-pressed','false');
-    const focusBuilding=()=>{hovered=button.dataset.place;previewPlace(hovered);wake();};
+    const focusBuilding=()=>{hovered=button.dataset.place;wake();};
     const blurBuilding=()=>{if(hovered===button.dataset.place)hovered=null;wake();};
     button.addEventListener('pointerenter',focusBuilding);
     button.addEventListener('pointerleave',blurBuilding);
@@ -176,10 +167,7 @@
   document.querySelector('.world-reset').addEventListener('click',()=>{
     keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=spawn.x;player.y=spawn.y;player.facing=1;selected=null;
     portals.forEach(button=>button.setAttribute('aria-pressed','false'));
-    document.querySelector('#destination-kicker').textContent='EXPLORE THE CAMPUS';
-    document.querySelector('#destination-title').textContent='Choose your next stop.';
-    document.querySelector('#destination-description').textContent='Four places to explore. Select a building, or take a walk along the paths.';
-    const link=document.querySelector('#destination-link');link.href='publications.html';link.textContent='View publications';draw();
+    draw();
   });
   new ResizeObserver(resize).observe(canvas);resize();
 })();

@@ -1,4 +1,4 @@
-﻿/* Run with: node tests/world-runtime.test.cjs (no dependencies). */
+/* Run with: node tests/world-runtime.test.cjs (no dependencies). */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -20,7 +20,7 @@ function element(id) {
     addEventListener(key, fn) { events.set(`${id}:${key}`, fn); } };
 }
 for (const id of Object.keys(core.places)) elements.set(id, element(id));
-for (const id of ['.world-spawn-label', '#destination-kicker', '#destination-title', '#destination-description', '#destination-link', '.world-reset']) elements.set(id, element(id));
+for (const id of ['.world-spawn-label', '.world-reset']) elements.set(id, element(id));
 const context = new Proxy({}, {
   get(object, key) {
     if (key === 'translate') return (x, y) => assert.ok(core.walkable(x, y), 'Rendered avatar left a road');
@@ -54,7 +54,6 @@ function flush() {
   }
 }
 events.get('publications:pointerenter')(); flush();
-assert.equal(elements.get('#destination-title').textContent, 'Publications');
 assert.equal(entries.length, 0, 'Hover must not navigate');
 events.get('publications:pointerleave')(); flush();
 let maxDuration = 0;
@@ -69,5 +68,4 @@ for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) 
 }
 assert.ok(maxDuration <= 340, 'Travel became too slow');
 events.get('.world-reset:click')(); flush();
-assert.equal(elements.get('#destination-title').textContent, 'Choose your next stop.');
-console.log(`PASS: calibrated renderer, hover preview, 16 automatic entries, reset, max ${maxDuration}ms travel.`);
+console.log(`PASS: calibrated renderer, hover, 16 automatic entries, reset, max ${maxDuration}ms travel.`);

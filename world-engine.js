@@ -2,10 +2,10 @@
 (() => {
   const width = 980, height = 560;
   const places = {
-    publications: { x: 235, y: 215, title: 'Publications', kicker: 'THE ARCHIVE', description: 'Efficient AI, multimodal models, and agent evaluation. Explore 12 publications and manuscripts, including QuantVLA and OS-Omni.', href: 'publications.html?v=20261123-wind1' },
-    experience: { x: 750, y: 215, title: 'Experience', kicker: 'THE SYSTEMS LAB', description: 'Research at The Ohio State University and an internship at TouchstoneAI. From low-bit inference to coding-agent evaluation.', href: 'experience.html?v=20261123-wind1' },
-    education: { x: 235, y: 485, title: 'Education', kicker: 'THE ACADEMY', description: 'A path through architecture, digital fabrication, and computer science at HUST, Michigan, and Penn.', href: 'education.html?v=20261123-wind1' },
-    beyond: { x: 750, y: 485, title: 'Beyond CS', kicker: 'THE DESIGN STUDIO', description: 'Architecture and computational making: Dissolved Skyscraper, 4D-City, and Serpentine Gallery.', href: 'beyond.html?v=20261123-wind1' }
+    publications: { x: 235, y: 215, title: 'Publications', kicker: 'THE ARCHIVE', description: 'Efficient AI, multimodal models, and agent evaluation. Explore 12 publications and manuscripts, including QuantVLA and OS-Omni.', href: 'publications.html?v=20261123-wind2' },
+    experience: { x: 750, y: 215, title: 'Experience', kicker: 'THE SYSTEMS LAB', description: 'Research at The Ohio State University and an internship at TouchstoneAI. From low-bit inference to coding-agent evaluation.', href: 'experience.html?v=20261123-wind2' },
+    education: { x: 235, y: 485, title: 'Education', kicker: 'THE ACADEMY', description: 'A path through architecture, digital fabrication, and computer science at HUST, Michigan, and Penn.', href: 'education.html?v=20261123-wind2' },
+    beyond: { x: 750, y: 485, title: 'Beyond CS', kicker: 'THE DESIGN STUDIO', description: 'Architecture and computational making: Dissolved Skyscraper, 4D-City, and Serpentine Gallery.', href: 'beyond.html?v=20261123-wind2' }
   };
   const nodes = [
     {x:490,y:255}, {x:235,y:255}, {x:750,y:255},
