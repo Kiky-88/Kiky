@@ -3,7 +3,7 @@
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  const { width: W, height: H, places, nodes, findPath, moveAlongRoad, project } = ResearchWorldCore;
+  const { width: W, height: H, places, nodes, findPath, moveOnRoad } = ResearchWorldCore;
   const spawn = nodes[0];
   const player = { ...spawn, facing: 1 };
   const keys = new Set();
@@ -104,7 +104,7 @@
     let moving=false;
     if(dx||dy){
       path=[];travelDestination=null;
-      const next=moveAlongRoad(player,dx,dy,210*dt);
+      const next=moveOnRoad(player,dx,dy,210*dt);
       moving=Math.hypot(next.x-player.x,next.y-player.y)>0.001;
       player.x=next.x;player.y=next.y;
       if(dx)player.facing=Math.sign(dx);
@@ -153,7 +153,7 @@
     const r=canvas.getBoundingClientRect(),point={x:(event.clientX-r.left)/r.width*W,y:(event.clientY-r.top)/r.height*H};
     if(entering)return;
     travelDestination=null;
-    canvas.focus({preventScroll:true});path=findPath(player,project(point));wake();
+    canvas.focus({preventScroll:true});path=findPath(player,point);wake();
   });
   canvas.addEventListener('keydown',event=>{
     const key=event.key.toLowerCase();

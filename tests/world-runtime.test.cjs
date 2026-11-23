@@ -13,7 +13,7 @@ const sandbox = {};
 vm.runInNewContext(source['world-engine.js'], sandbox);
 const core = sandbox.ResearchWorldCore;
 const events = new Map(), elements = new Map(), frames = [], entries = [];
-let clock = 0;
+let clock = 0, lastPlayer = null;
 function element(id) {
   return { style: {}, dataset: { place: id },
     setAttribute(key, value) { this[key] = value; },
@@ -23,7 +23,7 @@ for (const id of Object.keys(core.places)) elements.set(id, element(id));
 for (const id of ['.world-spawn-label', '.world-reset']) elements.set(id, element(id));
 const context = new Proxy({}, {
   get(object, key) {
-    if (key === 'translate') return (x, y) => assert.ok(core.walkable(x, y), 'Rendered avatar left a road');
+    if (key === 'translate') return (x, y) => { assert.ok(core.walkable(x, y), 'Rendered avatar left a road'); lastPlayer = {x,y}; };
     if (key === 'createLinearGradient' || key === 'createRadialGradient') return () => ({ addColorStop() {} });
     return object[key] ?? (() => {});
   },
@@ -39,7 +39,7 @@ sandbox.document = {
   addEventListener() {}
 };
 sandbox.window = {
-  devicePixelRatio: 2, matchMedia() { return { matches: false }; }, addEventListener() {},
+  devicePixelRatio: 2, matchMedia() { return { matches: false }; }, addEventListener(key, fn) { events.set(`window:${key}`, fn); },
   navigatePage(url, options) { entries.push({ url, options, time: clock }); },
   location: { assign() { throw Error('Expected shared portal transition'); } }
 };
@@ -56,6 +56,22 @@ function flush() {
 events.get('publications:pointerenter')(); flush();
 assert.equal(entries.length, 0, 'Hover must not navigate');
 events.get('publications:pointerleave')(); flush();
+// A click inside the road must keep its lateral offset, not attach to a centerline.
+const target = {x:340,y:248};
+events.get('canvas:click')({clientX:20+target.x/core.width*900,clientY:100+target.y/core.height*514}); flush();
+assert.ok(Math.hypot(lastPlayer.x-target.x,lastPlayer.y-target.y)<0.01, 'Road click snapped to a centerline');
+events.get('canvas:keydown')({key:'s',preventDefault(){}});
+for(let i=0;i<3;i++)frames.shift()(clock+=16);
+events.get('window:keyup')({key:'s'});flush();
+assert.ok(lastPlayer.y>253 && Math.abs(lastPlayer.x-340)<.01, 'Keyboard cannot move sideways across pavement');
+const beforeDiagonal = {...lastPlayer};
+events.get('canvas:keydown')({key:'d',preventDefault(){}});
+events.get('canvas:keydown')({key:'w',preventDefault(){}});
+for(let i=0;i<3;i++)frames.shift()(clock+=16);
+events.get('window:keyup')({key:'d'});events.get('window:keyup')({key:'w'});flush();
+assert.ok(lastPlayer.x>beforeDiagonal.x+4 && lastPlayer.y<beforeDiagonal.y-4, 'Diagonal keyboard movement is constrained to a line');
+events.get('.world-reset:click')();flush();
+
 let maxDuration = 0;
 for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) {
   const before = entries.length, start = clock;
@@ -68,4 +84,4 @@ for (let pass = 0; pass < 4; pass++) for (const id of Object.keys(core.places)) 
 }
 assert.ok(maxDuration <= 340, 'Travel became too slow');
 events.get('.world-reset:click')(); flush();
-console.log(`PASS: calibrated renderer, hover, 16 automatic entries, reset, max ${maxDuration}ms travel.`);
+console.log(`PASS: calibrated renderer, exact road clicks, lateral/diagonal input, hover, 16 automatic entries, reset, max ${maxDuration}ms travel.`);
