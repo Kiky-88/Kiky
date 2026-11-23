@@ -123,16 +123,21 @@ filterButtons.forEach(button => button.addEventListener('click', () => {
   let navigating = false;
   const reset = () => {
     navigating = false;
-    document.body.classList.remove('page-leaving');
+    document.body.classList.remove('page-leaving', 'portal-leaving');
     document.body.removeAttribute('aria-busy');
   };
   window.addEventListener('pageshow', reset);
-  window.navigatePage = href => {
+  window.navigatePage = (href, options = {}) => {
     if (navigating) return;
     const target = new URL(href, window.location.href);
     if (target.origin !== window.location.origin) { window.location.assign(target.href); return; }
     navigating = true;
     if (reducedMotion.matches) { window.location.assign(target.href); return; }
+    if(options.portal){
+      document.body.style.setProperty('--portal-x',`${options.portal.x}px`);
+      document.body.style.setProperty('--portal-y',`${options.portal.y}px`);
+      document.body.classList.add('portal-leaving');
+    }
     document.body.classList.add('page-leaving');
     document.body.setAttribute('aria-busy', 'true');
     window.setTimeout(() => window.location.assign(target.href), 200);

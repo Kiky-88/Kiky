@@ -9,7 +9,23 @@
   const portals = [...document.querySelectorAll('.world-portal')];
   const hint = document.querySelector('.world-spawn-label');
   let selected = null, path = [], frame = null, lastTime = 0;
-  let travelDestination = null, travelSpeed = 0, entering = false;
+  let travelDestination = null, entering = false;
+  let travelElapsed = 0, travelDistance = 0, travelProgress = 0;
+  let hovered = null;
+  const buildingIds = Object.keys(places);
+  const effects = Object.fromEntries(buildingIds.map(id => [id, 0]));
+  const quietMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const easeTravel = t => t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+  function updateEffects(dt) {
+    let moving = false;
+    buildingIds.forEach(id => {
+      const target = id === hovered || id === selected ? 1 : 0;
+      const difference = target-effects[id];
+      if (quietMotion.matches || Math.abs(difference)<0.002) effects[id]=target;
+      else { effects[id]+=difference*(1-Math.exp(-24*dt)); moving=true; }
+    });
+    return moving;
+  }
   let scaleX = 1, scaleY = 1, pixelRatio = 1;
   const polygon = (points, fill, stroke) => {
     ctx.beginPath(); points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y)); ctx.closePath();
@@ -21,11 +37,21 @@
     ctx.strokeStyle = color; ctx.lineWidth = size; ctx.stroke();
   }
   function building(b, i) {
-    const {x,y,w,h} = b;
-    ctx.fillStyle = '#07141a70'; ctx.fillRect(x+12,y+14,w+9,h+13);
+    const {x,y:groundY,w,h} = b;
+    const glow = effects[buildingIds[i]] || 0;
+    const y = groundY - glow*6;
+    ctx.save();
+    if (glow>0.01) {
+      ctx.strokeStyle=`rgba(142,220,232,${glow*0.6})`;
+      ctx.lineWidth=1.5;
+      ctx.strokeRect(x-5,groundY-5,w+16,h+26);
+      ctx.fillStyle=`rgba(150,133,218,${glow*0.1})`;
+      ctx.fillRect(x-7,groundY-7,w+20,h+30);
+    }
+    ctx.fillStyle = '#07141a70'; ctx.fillRect(x+12,groundY+14,w+9,h+13);
     polygon([[x,y+h],[x+w,y+h],[x+w,y+h+14],[x,y+h+14]], '#1d2340', '#5d638e');
     polygon([[x+w,y],[x+w+10,y+10],[x+w+10,y+h+14],[x+w,y+h]], '#292e50', '#5d638e');
-    polygon([[x,y+12],[x+12,y],[x+w,y],[x+w,y+h],[x,y+h]], i===4?'#4a4d7b':'#343b65', '#8587b6');
+    polygon([[x,y+12],[x+12,y],[x+w,y],[x+w,y+h],[x,y+h]], i===4?'#4a4d7b':`rgb(${52+Math.round(glow*12)},${59+Math.round(glow*13)},${101+Math.round(glow*20)})`, '#8587b6');
     ctx.strokeStyle = '#4e5685'; ctx.lineWidth = 2;
     ctx.strokeRect(x+12,y+14,w-24,h-29);
     ctx.fillStyle = i===4 ? '#85b2ac' : '#202846';
@@ -45,8 +71,11 @@
       ctx.fillStyle='#a5e9f2';ctx.fillRect(x+w/2-3,y+21,6,28);
       line([[x+w/2-17,y+34],[x+w/2+17,y+34]],'#a5e9f2',3);
     }
-    ctx.fillStyle = '#8edce8';ctx.fillRect(x+w/2-13,y+h+2,26,4);
-    ctx.fillStyle='#282e50';ctx.fillRect(x+w/2-19,y+h+14,38,6);
+    ctx.shadowColor='#8edce8';ctx.shadowBlur=glow*14;
+    ctx.fillStyle = '#8edce8';ctx.fillRect(x+w/2-13,y+h+2,26,4+glow*2);
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#282e50';ctx.fillRect(x+w/2-19,groundY+h+14,38,6);
+    ctx.restore();
   }
   function draw() {
     ctx.setTransform(scaleX,0,0,scaleY,0,0);
@@ -73,10 +102,14 @@
     Object.entries(places).forEach(([id,p])=>{
       const active=selected===id;
       ctx.fillStyle=active?'#8edce8':'#9a91c9';ctx.fillRect(p.x-10,p.y-4,20,4);
-      if(active){ctx.strokeStyle='#8edce880';ctx.lineWidth=1;ctx.strokeRect(p.x-17,p.y-13,34,24);}
+      if(active){
+        ctx.strokeStyle='#8edce880';ctx.lineWidth=1;
+        ctx.beginPath();ctx.ellipse(p.x,p.y-1,19,10,0,0,Math.PI*2);ctx.stroke();
+        ctx.strokeStyle='#a49ade66';ctx.beginPath();ctx.ellipse(p.x,p.y-1,25,14,0,0,Math.PI*2);ctx.stroke();
+      }
     });
     if(path.length){
-      ctx.setLineDash([4,6]);line([[player.x,player.y],...path.map(p=>[p.x,p.y])],'#d9a49a',1.5);ctx.setLineDash([]);
+      ctx.setLineDash([4,6]);ctx.lineDashOffset=-travelElapsed*45;line([[player.x,player.y],...path.map(p=>[p.x,p.y])],'#a4b2de',1.5);ctx.setLineDash([]);ctx.lineDashOffset=0;
     }
     // Original explorer marker; no game characters or copyrighted art.
     const unit = Math.max(1, 0.8 * pixelRatio / Math.min(scaleX,scaleY));
@@ -107,7 +140,7 @@
       entering=false;travelDestination=id;
       path=findPath(player,place);
       const total=path.reduce((sum,p,i)=>sum+(i?Math.hypot(p.x-path[i-1].x,p.y-path[i-1].y):0),0);
-      travelSpeed=Math.max(1,total/0.32);
+      travelDistance=total;travelElapsed=0;travelProgress=0;
       document.querySelector('#destination-kicker').textContent='ENTERING / '+place.kicker;
       if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
         player.x=place.x;player.y=place.y;path=[];enterPlace(id);
@@ -118,7 +151,9 @@
   function enterPlace(id) {
     if(entering)return;
     entering=true;keys.clear();path=[];travelDestination=null;
-    if(window.navigatePage)window.navigatePage(places[id].href);
+    const box=canvas.getBoundingClientRect(), place=places[id];
+    const portal={ x:box.left+place.x/W*box.width, y:box.top+place.y/H*box.height };
+    if(window.navigatePage)window.navigatePage(place.href,{portal});
     else window.location.assign(places[id].href);
   }
   function update(dt) {
@@ -135,7 +170,15 @@
       player.x=next.x;player.y=next.y;
       if(dx)player.facing=Math.sign(dx);
     }else if(path.length){
-      let remaining=(travelDestination?travelSpeed:500)*dt;
+      let remaining=500*dt;
+      if(travelDestination){
+        travelElapsed=Math.min(0.30,travelElapsed+dt);
+        const eased=easeTravel(travelElapsed/0.30);
+        remaining=travelDistance*(eased-travelProgress);
+        travelProgress=eased;
+        // Consume the exact remaining distance at the end to avoid rounding stalls.
+        if(travelElapsed>=0.30)remaining+=0.01;
+      }
       while(path.length && remaining>0){
         const target=path[0],d=Math.hypot(target.x-player.x,target.y-player.y);
         if(d<=remaining){player.x=target.x;player.y=target.y;remaining-=d;path.shift();}
@@ -148,10 +191,23 @@
     const nearby=Object.entries(places).find(([_,p])=>Math.hypot(p.x-player.x,p.y-player.y)<12);
     if(nearby){selectPlace(nearby[0],false);enterPlace(nearby[0]);}
   }
-  function tick(time){frame=null;const dt=lastTime?Math.min((time-lastTime)/1000,.04):.016;lastTime=time;update(dt);draw();if(keys.size||path.length)frame=requestAnimationFrame(tick);else lastTime=0;}
+  function tick(time){
+    frame=null;
+    const dt=lastTime?Math.min((time-lastTime)/1000,.04):.016;
+    lastTime=time;update(dt);
+    const effectsMoving=updateEffects(dt);draw();
+    if(keys.size||path.length||effectsMoving)frame=requestAnimationFrame(tick);
+    else lastTime=0;
+  }
   function wake(){if(frame===null)frame=requestAnimationFrame(tick);}
   portals.forEach(button=>{
     button.setAttribute('aria-pressed','false');
+    const focusBuilding=()=>{hovered=button.dataset.place;wake();};
+    const blurBuilding=()=>{if(hovered===button.dataset.place)hovered=null;wake();};
+    button.addEventListener('pointerenter',focusBuilding);
+    button.addEventListener('pointerleave',blurBuilding);
+    button.addEventListener('focus',focusBuilding);
+    button.addEventListener('blur',blurBuilding);
     button.addEventListener('click',()=>{selectPlace(button.dataset.place);canvas.focus({preventScroll:true});});
   });
   canvas.addEventListener('click',event=>{
@@ -170,7 +226,7 @@
   canvas.addEventListener('blur',()=>keys.clear());
   document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();path=[];}});
   document.querySelector('.world-reset').addEventListener('click',()=>{
-    keys.clear();path=[];travelDestination=null;entering=false;player.x=490;player.y=290;player.facing=1;selected=null;
+    keys.clear();path=[];travelDestination=null;entering=false;hovered=null;buildingIds.forEach(id=>effects[id]=0);player.x=490;player.y=290;player.facing=1;selected=null;
     portals.forEach(button=>button.setAttribute('aria-pressed','false'));
     document.querySelector('#destination-kicker').textContent='START EXPLORING';
     document.querySelector('#destination-title').textContent='A few paths. One curious mind.';
