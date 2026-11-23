@@ -539,3 +539,12 @@ footer .brand { opacity:.75; }
   .profile-panel .portrait, .profile-panel .portrait img { width:90px; }
   .profile-panel .portrait img { height:120px; }
 }
+/* Align navigation, portrait, and content to one consistent page grid. */
+.site-header-inner { max-width:1320px; }
+.container { max-width:1320px; grid-template-columns:190px minmax(0,1fr); gap:48px; }
+@media (max-width:1050px) and (min-width:761px) {
+  .container { grid-template-columns:165px minmax(0,1fr); gap:30px; }
+}
+@media (max-width:760px) {
+  .container { grid-template-columns:1fr; gap:28px; max-width:700px; }
+}
